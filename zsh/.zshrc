@@ -63,7 +63,8 @@ ZSH_THEME="agnoster"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git
+  git 
+  zsh-autosuggestions
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -96,4 +97,9 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+#Only display ~ as prompt
 prompt_context() {}
+
+# Set color for zsh-autocomplete
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=7'
