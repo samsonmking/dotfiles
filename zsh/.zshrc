@@ -1,4 +1,3 @@
-if [ "$TMUX" = "" ]; then tmux; fi
 #If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -108,7 +107,7 @@ export TERM=xterm-256color
 prompt_context() {}
 
 # Set color for zsh-autocomplete
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=7'
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 
 # Powerelvel10k config
 source ~/.purepower
