@@ -121,5 +121,9 @@ prompt_context() {}
 # Set color for zsh-autocomplete
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 
+if type nvim > /dev/null 2>&1; then
+  alias vim='nvim'
+fi
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
