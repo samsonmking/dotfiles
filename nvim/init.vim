@@ -14,6 +14,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'morhetz/gruvbox'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'preservim/nerdtree'
 
 call plug#end()
 "------------------------------------------------------------
@@ -234,3 +235,9 @@ let g:coc_global_extensions = [
     \'coc-python',
     \'coc-git'
     \]
+
+"-------------------------------------------------------------
+" NERDTree
+" Toggle NERDTree with Ctrl+n
+map <C-n> :NERDTreeToggle<CR>
+
