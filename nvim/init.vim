@@ -263,6 +263,7 @@ let g:coc_global_extensions = [
     \'coc-python',
     \'coc-git',
     \'coc-yaml',
+    \'coc-css'
     \]
 
 "-------------------------------------------------------------
