@@ -78,6 +78,7 @@ plugins=(
   git 
   zsh-autosuggestions
   nvm
+  dotenv
 )
 
 source $ZSH/oh-my-zsh.sh
