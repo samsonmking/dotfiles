@@ -16,6 +16,7 @@ Plug 'sainnhe/sonokai'
 Plug 'preservim/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'dense-analysis/ale'
+Plug 'preservim/nerdcommenter'
 
 call plug#end()
 "------------------------------------------------------------
@@ -183,6 +184,7 @@ let g:ale_fixers = {
 \   'javascript': ['prettier'],
 \   'css': ['prettier'],
 \   'html': ['prettier'],
+\   'markdown': ['prettier'],
 \}
 
 let g:ale_linters_explicit = 1
