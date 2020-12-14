@@ -185,7 +185,11 @@ let g:ale_fixers = {
 \   'css': ['prettier'],
 \   'html': ['prettier'],
 \   'markdown': ['prettier'],
+\   'python': ['autopep8']
 \}
-
+let g:ale_linters = {
+\   'python': ['pylint']
+\}
+let g:ale_python_pylint_options = '--load-plugins pylint_django'
 let g:ale_linters_explicit = 1
 let g:ale_fix_on_save = 1
