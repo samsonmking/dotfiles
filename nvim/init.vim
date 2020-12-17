@@ -17,6 +17,7 @@ Plug 'preservim/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'dense-analysis/ale'
 Plug 'preservim/nerdcommenter'
+Plug 'ludovicchabant/vim-gutentags'
 
 call plug#end()
 "------------------------------------------------------------
@@ -185,7 +186,7 @@ let g:ale_fixers = {
 \   'css': ['prettier'],
 \   'html': ['prettier'],
 \   'markdown': ['prettier'],
-\   'python': ['autopep8']
+\   'python': ['autopep8', 'isort']
 \}
 let g:ale_linters = {
 \   'python': ['pylint']
