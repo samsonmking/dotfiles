@@ -79,6 +79,7 @@ plugins=(
   zsh-autosuggestions
   nvm
   dotenv
+  fzf
 )
 
 source $ZSH/oh-my-zsh.sh
