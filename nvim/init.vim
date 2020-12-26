@@ -194,3 +194,9 @@ let g:ale_linters = {
 let g:ale_python_pylint_options = '--load-plugins pylint_django'
 let g:ale_linters_explicit = 1
 let g:ale_fix_on_save = 1
+
+
+
+"-------------------------------------------------------------
+" gutentags
+let g:gutentags_cache_dir = expand('~/.cache/vim/ctags/')
