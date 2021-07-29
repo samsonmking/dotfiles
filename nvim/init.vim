@@ -1,3 +1,11 @@
+" Use case insensitive search, except when using capital letters
+set ignorecase
+set smartcase
+
+if exists('g:vscode')
+    finish
+endif
+
 " Bootstrap Vim-plug
 let autoload_plug_path = stdpath('data') . '/site/autoload/plug.vim'
 if !filereadable(autoload_plug_path)
@@ -91,9 +99,6 @@ set updatetime=300
 " which are considered to add usability. Which, if any, of these options to
 " use is very much a personal preference, but they are harmless.
  
-" Use case insensitive search, except when using capital letters
-set ignorecase
-set smartcase
  
 " Allow backspacing over autoindent, line breaks and start of insert action
 set backspace=indent,eol,start
