@@ -47,12 +47,13 @@ call plug#begin(stdpath('config').'/plugged')
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'navarasu/onedark.nvim'
 Plug 'preservim/nerdtree'
 Plug 'itchyny/lightline.vim'
 Plug 'dense-analysis/ale'
 Plug 'preservim/nerdcommenter'
 Plug 'tpope/vim-sleuth'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
 call plug#end()
 
@@ -61,8 +62,7 @@ call plug#end()
 if has('termguicolors')
   set termguicolors
 endif
-let g:onedark_style = 'darker'
-colorscheme onedark 
+colorscheme catppuccin-mocha
 
 "  fzf options
 " ------------------------------------------------------------
@@ -96,7 +96,7 @@ let g:ale_fix_on_save = 1
 "-------------------------------------------------------------
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  auto_install = false,
   highlight = {
     enable = true,              -- false will disable the whole extension
     additional_vim_regex_highlighting = false,
