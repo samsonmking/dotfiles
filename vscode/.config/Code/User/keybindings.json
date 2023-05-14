@@ -1,0 +1,7 @@
+[
+  {
+    "key": "ctrl+w",
+    "when": "sideBarFocus",
+    "command": "workbench.action.focusActiveEditorGroup"
+  }
+]
