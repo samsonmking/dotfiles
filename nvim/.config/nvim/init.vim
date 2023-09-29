@@ -27,6 +27,8 @@ set cmdheight=2                         " Set the command window height to 2 lin
 set pastetoggle=<F11>                   " Use <F11> to toggle between 'paste' and 'nopaste'
 set noswapfile                          " Disable swp files
 set nocompatible                        " Ignore vi compatability
+set spelllang=en_us
+set spell
 filetype on                             " Filetype specific logic
 filetype plugin on
 
@@ -96,7 +98,7 @@ let g:ale_fix_on_save = 1
 "-------------------------------------------------------------
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  auto_install = false,
+  auto_install = true,
   highlight = {
     enable = true,              -- false will disable the whole extension
     additional_vim_regex_highlighting = false,
