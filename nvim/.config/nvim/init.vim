@@ -46,12 +46,10 @@ unlet autoload_plug_path
 "-------------------------------------------------------------
 call plug#begin(stdpath('config').'/plugged')
 
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'preservim/nerdtree'
 Plug 'itchyny/lightline.vim'
-Plug 'dense-analysis/ale'
 Plug 'preservim/nerdcommenter'
 Plug 'tpope/vim-sleuth'
 Plug 'christoomey/vim-tmux-navigator'
@@ -77,34 +75,6 @@ nnoremap <C-p> :Files<CR>
 "-------------------------------------------------------------
 " Toggle NERDTree with Ctrl+n
 map <C-n> :NERDTreeToggle<CR>
-
-" ALE
-"-------------------------------------------------------------
-let g:ale_fixers = {
-\ 'javascript': ['prettier'],
-\ 'css': ['prettier'],
-\ 'html': ['prettier'],
-\ 'markdown': ['prettier'],
-\ 'python': ['autopep8', 'isort']
-\}
-let g:ale_linters = {
-\ 'python': ['pylint']
-\}
-let g:ale_python_pylint_options = '--load-plugins pylint_django'
-let g:ale_linters_explicit = 1
-let g:ale_fix_on_save = 1
-
-" treesitter
-"-------------------------------------------------------------
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  auto_install = true,
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    additional_vim_regex_highlighting = false,
-  },
-}
-EOF
 
 " lightline
 "-------------------------------------------------------------
