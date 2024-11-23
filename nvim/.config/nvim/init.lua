@@ -1,3 +1,20 @@
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(lazypath)
+
 -- VSCode + Neovim Options
 vim.opt.ignorecase = true                -- Use case insensitive search
 vim.opt.smartcase = true                 -- Except when using capital letters
@@ -33,37 +50,28 @@ vim.opt.spell = true
 vim.cmd('filetype on')
 vim.cmd('filetype plugin on')
 
--- Bootstrap Vim-plug
-local install_path = vim.fn.stdpath('data') .. '/site/autoload/plug.vim'
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-    vim.fn.system({
-        'curl', '-fLo', install_path, '--create-dirs',
-        'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    })
-    vim.cmd('autocmd VimEnter * PlugInstall --sync | source $MYVIMRC')
-end
-
--- Vim-plug
-vim.cmd([[
-call plug#begin(stdpath('config').'/plugged')
-
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'preservim/nerdtree'
-Plug 'itchyny/lightline.vim'
-Plug 'preservim/nerdcommenter'
-Plug 'tpope/vim-sleuth'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
-
-call plug#end()
-]])
+-- Setup lazy.nvim
+require("lazy").setup({
+  spec = {
+    -- add your plugins here
+    {"junegunn/fzf", dir = "~/.fzf", build = "./install --all"},
+    {"junegunn/fzf.vim"},
+    {"preservim/nerdtree"},
+    {"itchyny/lightline.vim"},
+    {"preservim/nerdcommenter"},
+    {"tpope/vim-sleuth"},
+    {"christoomey/vim-tmux-navigator"},
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000 }
+  },
+  install = { colorscheme = { "catppuccin" } },
+  checker = { enabled = true },
+})
 
 -- Color scheme
 if vim.fn.has('termguicolors') == 1 then
     vim.opt.termguicolors = true
 end
-vim.cmd('colorscheme catppuccin-mocha')
+vim.cmd.colorscheme "catppuccin"
 
 -- fzf options
 -- exclude files in .gitignore from fzf
