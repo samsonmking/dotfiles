@@ -61,9 +61,9 @@ require("lazy").setup({
     {"preservim/nerdcommenter"},
     {"tpope/vim-sleuth"},
     {"christoomey/vim-tmux-navigator"},
-    { "catppuccin/nvim", name = "catppuccin", priority = 1000 }
+    {"navarasu/onedark.nvim", name = "onedark", priority = 1000}
   },
-  install = { colorscheme = { "catppuccin" } },
+  install = { colorscheme = { "onedark" } },
   checker = { enabled = true },
 })
 
@@ -71,7 +71,11 @@ require("lazy").setup({
 if vim.fn.has('termguicolors') == 1 then
     vim.opt.termguicolors = true
 end
-vim.cmd.colorscheme "catppuccin"
+vim.cmd.colorscheme "onedark"
+require('onedark').setup {
+    style = 'darker'
+}
+require('onedark').load()
 
 -- fzf options
 -- exclude files in .gitignore from fzf

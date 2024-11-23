@@ -1,10 +1,10 @@
 {
-  "catppuccin": { "branch": "main", "commit": "a4c64d7605f6eb95674e322bbbedfaa00aab7904" },
   "fzf.vim": { "branch": "master", "commit": "556f45e79ae5e3970054fee4c4373472604a1b4e" },
   "lazy.nvim": { "branch": "main", "commit": "7967abe55752aa90532e6bb4bd4663fe27a264cb" },
   "lightline.vim": { "branch": "master", "commit": "d6a07ea376a4b7372aa59e7ea6a051c9470bb4d0" },
   "nerdcommenter": { "branch": "master", "commit": "66c07e4083ab02ed2540ac289cc602c70b858c13" },
   "nerdtree": { "branch": "master", "commit": "9b465acb2745beb988eff3c1e4aa75f349738230" },
+  "onedark": { "branch": "master", "commit": "67a74c275d1116d575ab25485d1bfa6b2a9c38a6" },
   "vim-sleuth": { "branch": "master", "commit": "be69bff86754b1aa5adcbb527d7fcd1635a84080" },
   "vim-tmux-navigator": { "branch": "master", "commit": "424b5caa154bff34dc258ee53cec5a8e36cf7ea8" }
 }
