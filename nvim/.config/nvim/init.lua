@@ -54,7 +54,7 @@ vim.cmd('filetype plugin on')
 require("lazy").setup({
   spec = {
     -- add your plugins here
-    {"junegunn/fzf", dir = "~/.fzf", build = "./install --all"},
+    { "junegunn/fzf", build = "./install --bin" },
     {"junegunn/fzf.vim"},
     {"preservim/nerdtree"},
     {"itchyny/lightline.vim"},
