@@ -1,0 +1,4 @@
+[alias]
+	# Switch to recent branch using fzf
+	recent-switch = "!f() { git checkout $(git branch --sort=-committerdate | fzf); }; f"
+	rsw = recent-switch
