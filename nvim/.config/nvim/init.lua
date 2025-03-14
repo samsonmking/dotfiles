@@ -1,4 +1,6 @@
--- Bootstrap lazy.nvim
+-- Disable netrw for nvim-tree
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1-- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -56,7 +58,8 @@ require("lazy").setup({
     -- add your plugins here
     { "junegunn/fzf", build = "./install --bin" },
     {"junegunn/fzf.vim"},
-    {"preservim/nerdtree"},
+    {"nvim-tree/nvim-tree.lua", priority = 800},
+    {"nvim-tree/nvim-web-devicons", opt = true}, -- optional, for file icons
     {"itchyny/lightline.vim"},
     {"preservim/nerdcommenter"},
     {"tpope/vim-sleuth"},
@@ -110,6 +113,33 @@ require('vscode').setup({
 
 -- Load the theme
 vim.cmd.colorscheme "vscode"
+
+-- nvim-tree configuration
+require("nvim-tree").setup({
+  sort = {
+    sorter = "case_sensitive",
+  },
+  view = {
+    width = 30,
+  },
+  renderer = {
+    group_empty = true,
+  },
+  filters = {
+    dotfiles = false,
+  },
+  git = {
+    enable = true,
+  },
+  diagnostics = {
+    enable = true,
+    show_on_dirs = true,
+  },
+})
+
+-- nvim-tree keymaps
+vim.keymap.set('n', '<C-n>', ':NvimTreeToggle<CR>')
+vim.keymap.set('n', '<leader>nf', ':NvimTreeFindFile<CR>')
 
 -- Treesitter configuration
 require('nvim-treesitter.configs').setup {
@@ -165,10 +195,6 @@ require('nvim-treesitter.configs').setup {
 vim.env.FZF_DEFAULT_COMMAND = 'rg --files'
 -- map C-p to fzf file search
 vim.keymap.set('n', '<C-p>', ':Files<CR>')
-
--- NERDTree
--- Toggle NERDTree with Ctrl+n
-vim.keymap.set('n', '<C-n>', ':NERDTreeToggle<CR>')
 
 -- lightline
 vim.g.lightline = {
