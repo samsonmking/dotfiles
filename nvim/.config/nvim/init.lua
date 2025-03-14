@@ -1,6 +1,8 @@
 -- Disable netrw for nvim-tree
 vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1-- Bootstrap lazy.nvim
+vim.g.loaded_netrwPlugin = 1
+
+-- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -56,8 +58,13 @@ vim.cmd('filetype plugin on')
 require("lazy").setup({
   spec = {
     -- add your plugins here
-    { "junegunn/fzf", build = "./install --bin" },
-    {"junegunn/fzf.vim"},
+    -- Replace fzf.vim with fzf-lua
+    {
+      "ibhagwan/fzf-lua",
+      dependencies = { "nvim-tree/nvim-web-devicons" },
+      opts = {},
+    },
+    
     {"nvim-tree/nvim-tree.lua", priority = 800},
     {"nvim-tree/nvim-web-devicons", opt = true}, -- optional, for file icons
     {"itchyny/lightline.vim"},
@@ -190,11 +197,9 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
--- fzf options
--- exclude files in .gitignore from fzf
-vim.env.FZF_DEFAULT_COMMAND = 'rg --files'
--- map C-p to fzf file search
-vim.keymap.set('n', '<C-p>', ':Files<CR>')
+-- fzf-lua keymaps
+vim.keymap.set('n', '<C-p>', function() require('fzf-lua').files() end, { silent = true, desc = "FzfLua files" })
+vim.keymap.set('n', '<C-b>', function() require('fzf-lua').buffers() end, { silent = true, desc = "FzfLua buffers" })
 
 -- lightline
 vim.g.lightline = {
