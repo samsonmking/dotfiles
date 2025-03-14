@@ -61,9 +61,9 @@ require("lazy").setup({
     {"preservim/nerdcommenter"},
     {"tpope/vim-sleuth"},
     {"christoomey/vim-tmux-navigator"},
-    {"navarasu/onedark.nvim", name = "onedark", priority = 1000}
+    {"Mofiqul/vscode.nvim", priority = 1000}
   },
-  install = { colorscheme = { "onedark" } },
+  install = { colorscheme = { "vscode" } },
   checker = { 
     enabled = true,     -- Keep the checker enabled
     frequency = 604800, -- Check once a week (in seconds: 7 * 24 * 60 * 60 = 604800)
@@ -89,11 +89,22 @@ require("lazy").setup({
 if vim.fn.has('termguicolors') == 1 then
     vim.opt.termguicolors = true
 end
-vim.cmd.colorscheme "onedark"
-require('onedark').setup {
-    style = 'darker'
-}
-require('onedark').load()
+
+-- Set up VSCode theme
+vim.o.background = 'dark' -- Use dark theme
+require('vscode').setup({
+    -- Enable transparent background
+    transparent = false,
+    -- Enable italic comments
+    italic_comments = true,
+    -- Disable nvim-tree background color
+    disable_nvimtree_bg = true,
+    -- Apply theme colors to terminal
+    terminal_colors = true
+})
+
+-- Load the theme
+vim.cmd.colorscheme "vscode"
 
 -- fzf options
 -- exclude files in .gitignore from fzf
@@ -107,5 +118,5 @@ vim.keymap.set('n', '<C-n>', ':NERDTreeToggle<CR>')
 
 -- lightline
 vim.g.lightline = {
-    colorscheme = 'catppuccin'
+    colorscheme = 'vscode'
 }
