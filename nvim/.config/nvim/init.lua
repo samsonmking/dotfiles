@@ -32,7 +32,7 @@ vim.opt.ttimeoutlen = 10                 -- Quickly time out on keycodes, but ne
 
 -- Exit early if in VSCode
 if vim.g.vscode then
-    return
+  return
 end
 
 -- Neovim Options
@@ -68,7 +68,7 @@ require("lazy").setup({
       dependencies = { "nvim-tree/nvim-web-devicons" },
       opts = {},
     },
-    
+
     {"nvim-tree/nvim-tree.lua", priority = 800},
     {"nvim-tree/nvim-web-devicons", opt = true}, -- optional, for file icons
     {"itchyny/lightline.vim"},
@@ -106,20 +106,20 @@ require("lazy").setup({
 
 -- Color scheme
 if vim.fn.has('termguicolors') == 1 then
-    vim.opt.termguicolors = true
+  vim.opt.termguicolors = true
 end
 
 -- Set up VSCode theme
 vim.o.background = 'dark' -- Use dark theme
 require('vscode').setup({
-    -- Enable transparent background
-    transparent = false,
-    -- Enable italic comments
-    italic_comments = true,
-    -- Disable nvim-tree background color
-    disable_nvimtree_bg = true,
-    -- Apply theme colors to terminal
-    terminal_colors = true
+  -- Enable transparent background
+  transparent = false,
+  -- Enable italic comments
+  italic_comments = true,
+  -- Disable nvim-tree background color
+  disable_nvimtree_bg = true,
+  -- Apply theme colors to terminal
+  terminal_colors = true
 })
 
 -- Load the theme
@@ -162,7 +162,7 @@ require('nvim-treesitter.configs').setup {
     "typescript", 
     "bash",
     "gitcommit",
-    
+
     -- Important for Neovim itself
     "c", 
     "lua", 
@@ -175,16 +175,16 @@ require('nvim-treesitter.configs').setup {
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
-  
+
   -- Automatically install missing parsers when entering buffer
   auto_install = true,
-  
+
   -- List of parsers to ignore installing (or "all")
   ignore_install = { },
 
   highlight = {
     enable = true,
-    
+
     -- Disable slow treesitter highlight for large files
     disable = function(lang, buf)
       local max_filesize = 100 * 1024 -- 100 KB
@@ -193,7 +193,7 @@ require('nvim-treesitter.configs').setup {
         return true
       end
     end,
-    
+
     additional_vim_regex_highlighting = false,
   },
   indent = {
@@ -218,5 +218,5 @@ end, { silent = true, desc = "Reindent entire file" })
 
 -- lightline
 vim.g.lightline = {
-    colorscheme = 'vscode'
+  colorscheme = 'vscode'
 }
