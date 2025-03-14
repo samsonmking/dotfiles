@@ -201,9 +201,20 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
--- fzf-lua keymaps
-vim.keymap.set('n', '<C-p>', function() require('fzf-lua').files() end, { silent = true, desc = "FzfLua files" })
-vim.keymap.set('n', '<C-b>', function() require('fzf-lua').buffers() end, { silent = true, desc = "FzfLua buffers" })
+-- Format current file mapping using Vim's = operator for proper indentation
+vim.keymap.set('n', '<leader>f', function()
+  -- Save cursor position using marks
+  vim.cmd('normal! mz')
+
+  -- Reindent the entire file with gg=G
+  vim.cmd('normal! gg=G')
+
+  -- Return to the previous position
+  vim.cmd('normal! `z')
+
+  -- Delete the mark to clean up
+  vim.cmd('delmarks z')
+end, { silent = true, desc = "Reindent entire file" })
 
 -- lightline
 vim.g.lightline = {
