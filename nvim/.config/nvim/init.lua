@@ -64,7 +64,25 @@ require("lazy").setup({
     {"navarasu/onedark.nvim", name = "onedark", priority = 1000}
   },
   install = { colorscheme = { "onedark" } },
-  checker = { enabled = true },
+  checker = { 
+    enabled = true,     -- Keep the checker enabled
+    frequency = 604800, -- Check once a week (in seconds: 7 * 24 * 60 * 60 = 604800)
+    notify = false,     -- Don't display notifications
+  },
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+  },
 })
 
 -- Color scheme
