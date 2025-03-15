@@ -1,7 +1,7 @@
 # /bin/bash
 set -e
 
-NVIM_RELEASE=https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
+NVIM_RELEASE=https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage
 NVIM_PATH=/usr/local/bin/nvim
 
 sudo rm -f $NVIM_PATH
