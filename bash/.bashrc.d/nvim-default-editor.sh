@@ -1,1 +1,1 @@
-export EDITOR="/usr/bin/nvim"
+export EDITOR="$(which nvim)"
