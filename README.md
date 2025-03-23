@@ -17,6 +17,7 @@ A collection of configuration files for various development tools. This reposito
   * `ctrl-alt + arrow/vim keys` -> resize panes
   * `alt-shift + vim keys` -> swap panes
   * `alt + h/l` or `number/vim keys` -> navigate windows
+  * `ctrl + vim keys` -> navigate between between panes and Neovim instances
 - Mouse mode enabled
 - 256 color support
 - Increased history limit
