@@ -1,8 +1,0 @@
-wm.bar.position: top
-regolith.wallpaper.file: /home/sam/Pictures/magicpattern-8h_tctpq4h0-unsplash.jpg
-regolith.lockscreen.wallpaper.file: /home/sam/Pictures/magicpattern-8h_tctpq4h0-unsplash.jpg
-gnome.terminal.update: false
-gtk.font_name: Ubuntu Regular
- 
-regolith.look.path: /usr/share/regolith-look/default
-
