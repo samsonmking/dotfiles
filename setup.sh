@@ -10,7 +10,7 @@ show_help() {
     echo ""
     echo "Available commands:"
     echo "  tmux              - Install tmux and tmux plugin manager"
-    echo "  nvim              - Install Neovim AppImage"
+    echo "  nvim              - Install Neovim"
     echo "                      Options:"
     echo "                        --update  Force reinstallation even if already installed"
     echo "  bash              - Configure bash with custom settings"

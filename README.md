@@ -62,7 +62,7 @@ The `setup.sh` script can automate installation and configuration:
 
 # Available commands:
 #   tmux              - Install tmux and tmux plugin manager
-#   nvim              - Install Neovim AppImage
+#   nvim              - Install Neovim
 #                       Options:
 #                         --update  Force reinstallation even if already installed
 #   bash              - Configure bash with custom settings
