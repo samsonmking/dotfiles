@@ -54,45 +54,18 @@ A collection of configuration files for various development tools. This reposito
   * `<Space>q` opens context menu (for spell check corrections and more)
 
 ## Installation
-
-The repository includes a setup script that can install and configure various components:
+The `setup.sh` script can automate installation and configuration:
 
 ```bash
 # Show available commands
 ./setup.sh help
 
-# Install and configure tmux
-./setup.sh tmux
-
-# Install Neovim AppImage
-./setup.sh nvim
-
-# Configure bash with custom settings
-./setup.sh bash
-
-# Install JetBrains Mono Nerd Font
-./setup.sh nerdfont
-
-# Install terminal color schemes
-./setup.sh terminal-colors
+# Available commands:
+#   tmux              - Install tmux and tmux plugin manager
+#   nvim              - Install Neovim AppImage
+#                       Options:
+#                         --update  Force reinstallation even if already installed
+#   bash              - Configure bash with custom settings
+#   nerdfont          - Install JetBrains Mono Nerd Font
+#   terminal-colors   - Install terminal color schemes
 ```
-
-## Usage
-
-1. Clone this repository to your home directory:
-   ```bash
-   git clone https://github.com/yourusername/dotfiles.git ~/.dotfiles
-   cd ~/.dotfiles
-   ```
-
-2. Run the setup script with desired components:
-   ```bash
-   ./setup.sh tmux
-   ./setup.sh nvim
-   ./setup.sh bash
-   ```
-
-3. To manually create symlinks for a specific package:
-   ```bash
-   stow -R -v -t $HOME nvim
-   ```
