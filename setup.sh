@@ -6,11 +6,13 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
 # Show help menu
 show_help() {
-    echo "Usage: $0 COMMAND"
+    echo "Usage: $0 COMMAND [OPTIONS]"
     echo ""
     echo "Available commands:"
     echo "  tmux              - Install tmux and tmux plugin manager"
     echo "  nvim              - Install Neovim AppImage"
+    echo "                      Options:"
+    echo "                        --update  Force reinstallation even if already installed"
     echo "  bash              - Configure bash with custom settings"
     echo "  nerdfont          - Install JetBrains Mono Nerd Font"
     echo "  terminal-colors   - Install terminal color schemes"
@@ -43,6 +45,76 @@ create_symlinks() {
     # Use stow to create symlinks
     stow -R -v -d "$SCRIPT_DIR" -t "$HOME" "$package"
     echo "Symlinks created successfully for $package"
+}
+
+# Helper function to install Neovim AppImage
+install_nvim_appimage() {
+    # Detect architecture
+    ARCH=$(uname -m)
+    
+    echo "Installing Neovim from AppImage for $ARCH architecture..."
+    
+    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+        # ARM64 architecture
+        NVIM_RELEASE=https://github.com/neovim/neovim/releases/download/stable/nvim-linux-arm64.appimage
+    else
+        # x86_64 architecture (default)
+        NVIM_RELEASE=https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage
+    fi
+    
+    NVIM_PATH=/usr/local/bin/nvim
+
+    sudo rm -f $NVIM_PATH
+    sudo wget $NVIM_RELEASE -O $NVIM_PATH
+    sudo chmod +x $NVIM_PATH
+
+    # Only run update-alternatives on Debian-based systems
+    if command -v update-alternatives >/dev/null 2>&1; then
+        echo "Setting up Neovim as an alternative for editor..."
+        sudo update-alternatives --install /usr/bin/editor editor $NVIM_PATH 35 && \
+        sudo update-alternatives --set editor $NVIM_PATH
+    else
+        echo "update-alternatives not found, skipping editor configuration."
+    fi
+    
+    echo "Neovim installation completed via AppImage!"
+}
+
+# Function for Neovim
+nvim_setup() {
+    UPDATE_FLAG=false
+    
+    # Check for update flag
+    if [ "$1" = "--update" ]; then
+        UPDATE_FLAG=true
+        echo "Update flag detected. Will reinstall Neovim if it exists."
+    fi
+    
+    # Check if nvim is already installed
+    if command -v nvim >/dev/null 2>&1 && [ "$UPDATE_FLAG" = false ]; then
+        echo "Neovim is already installed. Use --update flag to force reinstallation."
+    else
+        # If update flag is set and nvim exists, remove it first
+        if [ "$UPDATE_FLAG" = true ] && command -v nvim >/dev/null 2>&1; then
+            echo "Updating existing Neovim installation..."
+        fi
+        
+        # Detect if dnf is available, otherwise use AppImage
+        if command -v dnf >/dev/null 2>&1; then
+            echo "Fedora/RHEL-based system detected"
+            echo "Installing Neovim using dnf..."
+            sudo dnf install -y neovim python3-neovim
+            echo "Neovim installation completed via dnf!"
+        else
+            # Use AppImage for all other systems
+            install_nvim_appimage
+        fi
+    fi
+    
+    # Create symlinks (stow will automatically create the required directories)
+    create_symlinks "nvim"
+    
+    echo "Neovim configuration symlinks created successfully!"
 }
 
 # Function for tmux
@@ -87,29 +159,6 @@ tmux_setup() {
     create_symlinks "tmux"
     
     echo "tmux installation complete!"
-}
-
-# Function for Neovim
-nvim_setup() {
-    echo "Installing Neovim from AppImage..."
-    
-    NVIM_RELEASE=https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage
-    NVIM_PATH=/usr/local/bin/nvim
-
-    sudo rm -f $NVIM_PATH
-    sudo wget $NVIM_RELEASE -O $NVIM_PATH
-    sudo chmod +x $NVIM_PATH
-
-    sudo update-alternatives --install /usr/bin/editor editor $NVIM_PATH 35 && \
-    sudo update-alternatives --set editor $NVIM_PATH
-    
-    # Create required directory for nvim config
-    mkdir -p "$HOME/.config/nvim"
-    
-    # Create symlinks
-    create_symlinks "nvim"
-    
-    echo "Neovim installation complete!"
 }
 
 # Function for bash
@@ -197,7 +246,8 @@ case "$1" in
         tmux_setup
         ;;
     nvim)
-        nvim_setup
+        # Check for --update flag as second argument
+        nvim_setup "$2"
         ;;
     bash)
         bash_setup
