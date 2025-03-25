@@ -14,6 +14,7 @@ show_help() {
     echo "                      Options:"
     echo "                        --update  Force reinstallation even if already installed"
     echo "  bash              - Configure bash with custom settings"
+    echo "  git               - Configure Git with custom aliases"
     echo "  nerdfont          - Install JetBrains Mono Nerd Font"
     echo "  terminal-colors   - Install terminal color schemes"
     echo "  help              - Show this help message"
@@ -202,6 +203,47 @@ unset rc
     echo "Bash configuration files have been successfully linked."
 }
 
+# Helper function to install fzf
+ensure_fzf() {
+    if ! command -v fzf >/dev/null 2>&1; then
+        echo "fzf is not installed. Installing it now..."
+        if command -v apt-get >/dev/null 2>&1; then
+            sudo apt-get update && sudo apt-get install -y fzf
+        elif command -v dnf >/dev/null 2>&1; then
+            sudo dnf install -y fzf
+        else
+            echo "Error: Unable to install fzf. Unsupported package manager."
+            exit 1
+        fi
+    else
+        echo "fzf is already installed"
+    fi
+}
+
+# Function for Git configuration
+git_setup() {
+    echo "Setting up Git configuration..."
+    
+    # Ensure fzf is installed (needed for recent-switch alias)
+    ensure_fzf
+    
+    # Configure Git aliases using git config --global
+    echo "Configuring Git aliases..."
+    git config --global alias.recent-switch '!f() { git checkout $(git branch --sort=-committerdate | fzf); }; f'
+    git config --global alias.rsw 'recent-switch'
+
+    # Set Neovim as the default Git editor
+    echo "Setting Neovim as the default Git editor..."
+    if command -v nvim >/dev/null 2>&1; then
+        git config --global core.editor "nvim"
+        echo "Neovim set as the default Git editor"
+    else
+        echo "Warning: Neovim not found. Editor not set. Install Neovim first with './setup.sh nvim'"
+    fi
+    
+    echo "Git configuration complete!"
+}
+
 # Function for JetBrains Mono Nerd Font
 nerdfont_setup() {
     echo "Installing JetBrains Mono Nerd Font..."
@@ -251,6 +293,9 @@ case "$1" in
         ;;
     bash)
         bash_setup
+        ;;
+    git)
+        git_setup
         ;;
     nerdfont)
         nerdfont_setup
