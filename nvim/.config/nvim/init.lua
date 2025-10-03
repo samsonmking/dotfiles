@@ -207,19 +207,12 @@ require('nvim-treesitter.configs').setup {
 }
 
 -- Format current file mapping using Vim's = operator for proper indentation
-vim.keymap.set('n', '<leader>f', function()
-  -- Save cursor position using marks
-  vim.cmd('normal! mz')
+vim.keymap.set("n", "<leader>f", function()
+  local view = vim.fn.winsaveview()
+  vim.cmd("normal! gg=G")
+  vim.fn.winrestview(view)
+end, { desc = "Reindent buffer and restore view" })
 
-  -- Reindent the entire file with gg=G
-  vim.cmd('normal! gg=G')
-
-  -- Return to the previous position
-  vim.cmd('normal! `z')
-
-  -- Delete the mark to clean up
-  vim.cmd('delmarks z')
-end, { silent = true, desc = "Reindent entire file" })
 
 -- lightline
 vim.g.lightline = {
