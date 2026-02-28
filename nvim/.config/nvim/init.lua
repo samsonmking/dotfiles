@@ -164,7 +164,7 @@ vim.keymap.set('n', '<C-n>', ':NvimTreeToggle<CR>')
 vim.keymap.set('n', '<leader>nf', ':NvimTreeFindFile<CR>')
 
 -- Treesitter configuration
-require('nvim-treesitter.configs').setup {
+require'nvim-treesitter'.setup {
   -- A list of parser names, or "all" (the listed parsers MUST always be installed)
   ensure_installed = { 
     -- Languages you commonly use
