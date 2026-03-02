@@ -62,11 +62,15 @@ vim.cmd('filetype plugin on')
 require("lazy").setup({
   spec = {
     -- add your plugins here
+    -- Install fzf binary via plugin (package manager version may be too old for fzf-lua)
+    { "junegunn/fzf", build = "./install --bin" },
     -- Replace fzf.vim with fzf-lua
     {
       "ibhagwan/fzf-lua",
-      dependencies = { "nvim-tree/nvim-web-devicons" },
-      opts = {},
+      dependencies = { "nvim-tree/nvim-web-devicons", "junegunn/fzf" },
+      opts = {
+        fzf_bin = vim.fn.stdpath("data") .. "/lazy/fzf/bin/fzf",
+      },
     },
 
     {"nvim-tree/nvim-tree.lua", priority = 800},

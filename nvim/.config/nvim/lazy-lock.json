@@ -1,4 +1,5 @@
 {
+  "fzf": { "branch": "master", "commit": "260d160973a1df05038c93136a076ca29592e755" },
   "fzf-lua": { "branch": "main", "commit": "72ec224172eea757eab6b349775ad5bada7521d7" },
   "lazy.nvim": { "branch": "main", "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97" },
   "lightline.vim": { "branch": "master", "commit": "e358557e1a9f9fc860416c8eb2e34c0404078155" },
