@@ -1,6 +1,4 @@
--- Disable netrw for nvim-tree
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+-- Disable netrw for nvim-tree vim.g.loaded_netrw = 1 vim.g.loaded_netrwPlugin = 1
 
 -- Set leader key to space
 vim.g.mapleader = " "
@@ -79,7 +77,16 @@ require("lazy").setup({
     {"preservim/nerdcommenter"},
     {"tpope/vim-sleuth"},
     {"christoomey/vim-tmux-navigator"},
-    {"Mofiqul/vscode.nvim", priority = 1000},
+    {
+      "navarasu/onedark.nvim",
+      priority = 1000, -- make sure to load this before all the other start plugins
+      config = function()
+        require('onedark').setup {
+          style = 'darker'
+        }
+        require('onedark').load()
+      end
+    }
   },
   install = { colorscheme = { "vscode" } },
   checker = { 
@@ -108,61 +115,50 @@ if vim.fn.has('termguicolors') == 1 then
   vim.opt.termguicolors = true
 end
 
--- Set up VSCode theme
-vim.o.background = 'dark' -- Use dark theme
-require('vscode').setup({
-  -- Enable transparent background
-  transparent = false,
-  -- Enable italic comments
-  italic_comments = true,
-  -- Disable nvim-tree background color
-  disable_nvimtree_bg = true,
-  -- Apply theme colors to terminal
-  terminal_colors = true
-})
-
--- Load the theme
-vim.cmd.colorscheme "vscode"
+require('onedark').setup {
+  style = 'darker'
+}
+require('onedark').load()
 
 -- fzf-lua configuration
 vim.api.nvim_set_keymap("n", "<C-\\>", [[<Cmd>lua require"fzf-lua".buffers()<CR>]], {})
 vim.api.nvim_set_keymap("n", "<C-p>", [[<Cmd>lua require"fzf-lua".files()<CR>]], {})
 vim.api.nvim_set_keymap("n", "<C-g>", [[<Cmd>lua require"fzf-lua".grep_project()<CR>]], {})
 vim.keymap.set({ "i" }, "<C-x><C-f>",
-  function()
-    FzfLua.complete_file({
-      winopts = { preview = { hidden = true } }
-    })
-  end, { silent = true, desc = "Fuzzy complete file" })
+function()
+  FzfLua.complete_file({
+    winopts = { preview = { hidden = true } }
+  })
+end, { silent = true, desc = "Fuzzy complete file" })
 vim.keymap.set({ "i" }, "<C-x><C-a>",
-  function()
-    FzfLua.complete_file({
-      winopts = { preview = { hidden = true } },
-      actions = {
-        ["enter"] = function(selected, opts)
-          if not selected[1] then
-            if opts.__CTX and opts.__CTX.mode == "i" then
-              vim.cmd [[noautocmd lua vim.api.nvim_feedkeys('i', 'n', true)]]
-            end
-            return
+function()
+  FzfLua.complete_file({
+    winopts = { preview = { hidden = true } },
+    actions = {
+      ["enter"] = function(selected, opts)
+        if not selected[1] then
+          if opts.__CTX and opts.__CTX.mode == "i" then
+            vim.cmd [[noautocmd lua vim.api.nvim_feedkeys('i', 'n', true)]]
           end
-          local orig_complete = opts.complete
-          opts.complete = function(sel, o, l, c)
-            local newline, newcol = orig_complete(sel, o, l, c)
-            if not newline then return end
-            local match_pat = opts.word_pattern or "[^%s\"']*"
-            local before = c > 1
-              and (l:sub(1, c - 1):reverse():match(match_pat) or ""):reverse()
-              or ""
-            local path_start = c - #before - 1
-            return newline:sub(1, path_start) .. "@" .. newline:sub(path_start + 1),
-              newcol + 1
-          end
-          require("fzf-lua.actions").complete(selected, opts)
-        end,
-      },
-    })
-  end, { silent = true, desc = "Fuzzy complete @file" })
+          return
+        end
+        local orig_complete = opts.complete
+        opts.complete = function(sel, o, l, c)
+          local newline, newcol = orig_complete(sel, o, l, c)
+          if not newline then return end
+          local match_pat = opts.word_pattern or "[^%s\"']*"
+          local before = c > 1
+          and (l:sub(1, c - 1):reverse():match(match_pat) or ""):reverse()
+          or ""
+          local path_start = c - #before - 1
+          return newline:sub(1, path_start) .. "@" .. newline:sub(path_start + 1),
+          newcol + 1
+        end
+        require("fzf-lua.actions").complete(selected, opts)
+      end,
+    },
+  })
+end, { silent = true, desc = "Fuzzy complete @file" })
 
 -- nvim-tree configuration
 require("nvim-tree").setup({
@@ -201,5 +197,5 @@ end, { desc = "Reindent buffer and restore view" })
 
 -- lightline
 vim.g.lightline = {
-  colorscheme = 'vscode'
+  colorscheme = 'one'
 }
