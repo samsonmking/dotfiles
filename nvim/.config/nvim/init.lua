@@ -78,17 +78,10 @@ require("lazy").setup({
     {"tpope/vim-sleuth"},
     {"christoomey/vim-tmux-navigator"},
     {
-      "navarasu/onedark.nvim",
-      priority = 1000, -- make sure to load this before all the other start plugins
-      config = function()
-        require('onedark').setup {
-          style = 'darker'
-        }
-        require('onedark').load()
-      end
+      "olimorris/onedarkpro.nvim",
+      priority = 1000, -- Ensure it loads first
     }
   },
-  install = { colorscheme = { "vscode" } },
   checker = { 
     enabled = true,     -- Keep the checker enabled
     frequency = 604800, -- Check once a week (in seconds: 7 * 24 * 60 * 60 = 604800)
@@ -115,10 +108,7 @@ if vim.fn.has('termguicolors') == 1 then
   vim.opt.termguicolors = true
 end
 
-require('onedark').setup {
-  style = 'darker'
-}
-require('onedark').load()
+vim.cmd("colorscheme onedark_dark")
 
 -- fzf-lua configuration
 vim.api.nvim_set_keymap("n", "<C-\\>", [[<Cmd>lua require"fzf-lua".buffers()<CR>]], {})
