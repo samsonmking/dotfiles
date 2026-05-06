@@ -120,6 +120,20 @@ function()
     winopts = { preview = { hidden = true } }
   })
 end, { silent = true, desc = "Fuzzy complete file" })
+vim.keymap.set({ "i" }, "<C-x><C-g>",
+function()
+  FzfLua.git_commits({
+    winopts = { preview = { hidden = true } },
+    complete = function(selected, _, line, col)
+      local hash = selected[1]:match("[^ ]+")
+      local after = #line > col and line:sub(col + 1) or ""
+      return line:sub(1, col) .. hash .. after, col + #hash
+    end,
+    actions = {
+      ["enter"] = require("fzf-lua.actions").complete,
+    },
+  })
+end, { silent = true, desc = "Fuzzy insert git commit hash" })
 vim.keymap.set({ "i" }, "<C-x><C-a>",
 function()
   FzfLua.complete_file({
