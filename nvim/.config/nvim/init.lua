@@ -52,6 +52,28 @@ vim.opt.compatible = false              -- Ignore vi compatability
 vim.opt.spelllang = 'en_us'
 vim.opt.spell = true
 
+-- Yank to system clipboard via OSC52 (forwarded by tmux → Ghostty → host).
+-- Paste is intentionally not wired through OSC52: tmux intercepts OSC52 reads
+-- and returns its own buffer instead of forwarding to the outer terminal,
+-- so `p` would return stale data. Use ⌘V/Ctrl-V in insert mode to paste from
+-- the host clipboard — that goes through bracketed paste, which works everywhere.
+vim.g.clipboard = {
+  name = "OSC 52",
+  copy = {
+    ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+    ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+  },
+  paste = {
+    ["+"] = function() return vim.split(vim.fn.getreg('"'), "\n") end,
+    ["*"] = function() return vim.split(vim.fn.getreg('"'), "\n") end,
+  },
+}
+-- Defer 'clipboard' until after UiEnter to avoid blocking startup on the
+-- provider. See kickstart.nvim and `:help 'clipboard'`.
+vim.schedule(function()
+  vim.o.clipboard = "unnamedplus"
+end)
+
 -- Enable filetype detection and plugins
 vim.cmd('filetype on')
 vim.cmd('filetype plugin on')
