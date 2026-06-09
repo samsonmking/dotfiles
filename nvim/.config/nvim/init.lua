@@ -1,5 +1,8 @@
 -- Disable netrw for nvim-tree vim.g.loaded_netrw = 1 vim.g.loaded_netrwPlugin = 1
 
+-- Source per-project .nvim.lua files
+vim.o.exrc = true
+
 -- Set leader key to space
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -109,7 +112,12 @@ require("lazy").setup({
       ---@module 'render-markdown'
       ---@type render.md.UserConfig
       opts = {},
-    }
+    },
+
+    -- LSP
+    { "neovim/nvim-lspconfig" },
+    { "mason-org/mason.nvim", opts = {} },
+    { "mason-org/mason-lspconfig.nvim" },
   },
   checker = { 
     enabled = true,     -- Keep the checker enabled
@@ -220,12 +228,47 @@ require("nvim-tree").setup({
 vim.keymap.set('n', '<C-n>', ':NvimTreeToggle<CR>')
 vim.keymap.set('n', '<leader>nf', ':NvimTreeFindFile<CR>')
 
--- Format current file mapping using Vim's = operator for proper indentation
+-- LSP configuration
+require("mason").setup()
+require("mason-lspconfig").setup({
+  ensure_installed = { "pyright" },
+})
+local pyright_root = vim.fs.root(0, {"pyproject.toml", "pyrightconfig.json", ".git"}) or vim.fn.getcwd()
+vim.lsp.config('pyright', {
+  root_markers = { "pyproject.toml", "pyrightconfig.json", ".git" },
+  settings = {
+    python = {
+      analysis = {
+        typeCheckingMode = "off",
+        extraPaths = { pyright_root },
+      },
+    },
+  },
+})
+vim.lsp.enable('pyright')
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
+  callback = function(event)
+    local map = function(keys, func, desc)
+      vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+    end
+    map('gd', vim.lsp.buf.definition, 'Go to definition')
+    map('gD', vim.lsp.buf.declaration, 'Go to declaration')
+    map('<leader>e', vim.diagnostic.open_float, 'Show diagnostics')
+  end,
+})
+
+-- Format: use LSP when available, otherwise reindent
 vim.keymap.set("n", "<leader>f", function()
-  local view = vim.fn.winsaveview()
-  vim.cmd("normal! gg=G")
-  vim.fn.winrestview(view)
-end, { desc = "Reindent buffer and restore view" })
+  if #vim.lsp.get_clients({ bufnr = 0 }) > 0 then
+    vim.lsp.buf.format()
+  else
+    local view = vim.fn.winsaveview()
+    vim.cmd("normal! gg=G")
+    vim.fn.winrestview(view)
+  end
+end, { desc = "Format buffer (LSP or reindent)" })
 
 
 -- lightline
