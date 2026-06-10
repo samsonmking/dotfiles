@@ -118,6 +118,22 @@ require("lazy").setup({
     { "neovim/nvim-lspconfig" },
     { "mason-org/mason.nvim", opts = {} },
     { "mason-org/mason-lspconfig.nvim" },
+
+    -- Completion
+    {
+      'saghen/blink.cmp',
+      version = '1.*',
+      opts = {
+        keymap = { preset = 'default' },
+        completion = {
+          documentation = { auto_show = true },
+        },
+        sources = {
+          default = { 'lsp', 'path', 'buffer' },
+        },
+        fuzzy = { implementation = "prefer_rust_with_warning" },
+      },
+    },
   },
   checker = { 
     enabled = true,     -- Keep the checker enabled
@@ -232,6 +248,9 @@ vim.keymap.set('n', '<leader>nf', ':NvimTreeFindFile<CR>')
 require("mason").setup()
 require("mason-lspconfig").setup({
   ensure_installed = { "pyright" },
+})
+vim.lsp.config('*', {
+  capabilities = require('blink.cmp').get_lsp_capabilities(),
 })
 local pyright_root = vim.fs.root(0, {"pyproject.toml", "pyrightconfig.json", ".git"}) or vim.fn.getcwd()
 vim.lsp.config('pyright', {
