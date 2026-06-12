@@ -137,6 +137,10 @@ require("lazy").setup({
       'saghen/blink.cmp',
       version = '1.*',
       opts = {
+        enabled = function()
+          local disabled = { markdown = true, gitcommit = true }
+          return not disabled[vim.bo.filetype]
+        end,
         keymap = { preset = 'default' },
         completion = {
           documentation = { auto_show = true },
