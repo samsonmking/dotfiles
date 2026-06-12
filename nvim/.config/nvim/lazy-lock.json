@@ -2,6 +2,7 @@
   "blink.cmp": { "branch": "main", "commit": "78336bc89ee5365633bcf754d93df01678b5c08f" },
   "fzf": { "branch": "master", "commit": "27dab2422e5faa6149b302d941280fcb8f9fe74c" },
   "fzf-lua": { "branch": "main", "commit": "beaa4e83e6be4174af291a464e4f49548c943963" },
+  "gitsigns.nvim": { "branch": "main", "commit": "25050e4ed39e628282831d4cbecb1850454ce915" },
   "lazy.nvim": { "branch": "main", "commit": "85c7ff3711b730b4030d03144f6db6375044ae82" },
   "lightline.vim": { "branch": "master", "commit": "6c283f8df85aa7219fa4096a6ed4ff45d48aa9e1" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "0a695750d747db1e7e70bcf0267ef8951c95fc83" },
