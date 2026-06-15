@@ -132,6 +132,9 @@ require("lazy").setup({
     { "mason-org/mason.nvim", opts = {} },
     { "mason-org/mason-lspconfig.nvim" },
 
+    -- Formatting
+    { "stevearc/conform.nvim" },
+
     -- Completion
     {
       'saghen/blink.cmp',
@@ -295,16 +298,25 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
--- Format: use LSP when available, otherwise reindent
+-- Formatting
+require('conform').setup {
+  notify_on_error = false,
+  format_on_save = function(bufnr)
+    if vim.bo[bufnr].filetype == 'python' then
+      return { timeout_ms = 500 }
+    end
+  end,
+  default_format_opts = {
+    lsp_format = 'fallback',
+  },
+  formatters_by_ft = {
+    python = { "ruff_organize_imports", "black" },
+  },
+}
+
 vim.keymap.set("n", "<leader>f", function()
-  if #vim.lsp.get_clients({ bufnr = 0 }) > 0 then
-    vim.lsp.buf.format()
-  else
-    local view = vim.fn.winsaveview()
-    vim.cmd("normal! gg=G")
-    vim.fn.winrestview(view)
-  end
-end, { desc = "Format buffer (LSP or reindent)" })
+  require('conform').format({ async = true })
+end, { desc = "Format buffer" })
 
 
 -- lightline
