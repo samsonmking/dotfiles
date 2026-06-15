@@ -112,6 +112,21 @@ nvim_setup() {
         fi
     fi
     
+    # Install tree-sitter CLI (required by tree-sitter-manager.nvim)
+    if ! command -v tree-sitter >/dev/null 2>&1; then
+        echo "Installing tree-sitter CLI..."
+        if command -v npm >/dev/null 2>&1; then
+            npm install -g tree-sitter-cli
+        elif command -v cargo >/dev/null 2>&1; then
+            cargo install tree-sitter-cli
+        else
+            echo "Error: Neither npm nor cargo found. Install one of them to get tree-sitter-cli."
+            exit 1
+        fi
+    else
+        echo "tree-sitter CLI is already installed"
+    fi
+
     # Create symlinks (stow will automatically create the required directories)
     create_symlinks "nvim"
     

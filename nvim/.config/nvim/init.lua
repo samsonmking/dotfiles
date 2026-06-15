@@ -107,8 +107,16 @@ require("lazy").setup({
       priority = 1000, -- Ensure it loads first
     },
     {
+      "romus204/tree-sitter-manager.nvim",
+      config = function()
+        require("tree-sitter-manager").setup({
+          ensure_installed = { "python", "typescript", "javascript" },
+        })
+      end,
+    },
+    {
       'MeanderingProgrammer/render-markdown.nvim',
-      dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
+      dependencies = { 'romus204/tree-sitter-manager.nvim', 'nvim-tree/nvim-web-devicons' },
       ---@module 'render-markdown'
       ---@type render.md.UserConfig
       opts = {},
