@@ -143,6 +143,12 @@ require("lazy").setup({
     { "neovim/nvim-lspconfig" },
     { "mason-org/mason.nvim", opts = {} },
     { "mason-org/mason-lspconfig.nvim" },
+    {
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
+      opts = {
+        ensure_installed = { "stylua" },
+      },
+    },
 
     -- Formatting
     { "stevearc/conform.nvim" },
@@ -279,7 +285,7 @@ vim.keymap.set('n', '<leader>nf', ':NvimTreeFindFile<CR>')
 -- LSP configuration
 require("mason").setup()
 require("mason-lspconfig").setup({
-  ensure_installed = { "pyright" },
+  ensure_installed = { "pyright", "lua_ls" },
 })
 vim.lsp.config('*', {
   capabilities = require('blink.cmp').get_lsp_capabilities(),
@@ -296,7 +302,19 @@ vim.lsp.config('pyright', {
     },
   },
 })
+vim.lsp.config('lua_ls', {
+  root_markers = { '.luarc.json', '.luarc.jsonc', '.stylua.toml', 'stylua.toml', '.git' },
+  settings = {
+    Lua = {
+      runtime = { version = 'LuaJIT' },
+      workspace = {
+        library = { vim.env.VIMRUNTIME },
+      },
+    },
+  },
+})
 vim.lsp.enable('pyright')
+vim.lsp.enable('lua_ls')
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
@@ -322,6 +340,7 @@ require('conform').setup {
     lsp_format = 'fallback',
   },
   formatters_by_ft = {
+    lua = { "stylua" },
     python = { "ruff_organize_imports", "black" },
   },
 }
