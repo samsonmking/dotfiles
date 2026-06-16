@@ -102,7 +102,21 @@ require("lazy").setup({
 
     { "nvim-tree/nvim-tree.lua", priority = 800 },
     { "nvim-tree/nvim-web-devicons", opt = true }, -- optional, for file icons
-    { "itchyny/lightline.vim" },
+    {
+      "nvim-lualine/lualine.nvim",
+      dependencies = { "nvim-tree/nvim-web-devicons" },
+      opts = {
+        options = {
+          theme = "onedark",
+          section_separators = "",
+          component_separators = "",
+        },
+        sections = {
+          lualine_c = { { "filename", path = 1 } },
+          lualine_x = { "filetype" },
+        },
+      },
+    },
     { "preservim/nerdcommenter" },
     { "tpope/vim-sleuth" },
     { "christoomey/vim-tmux-navigator" },
@@ -352,7 +366,3 @@ vim.keymap.set("n", "<leader>f", function()
   require("conform").format({ async = true })
 end, { desc = "Format buffer" })
 
--- lightline
-vim.g.lightline = {
-  colorscheme = "one",
-}
