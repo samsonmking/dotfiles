@@ -124,6 +124,7 @@ require("lazy").setup({
         },
       },
     },
+    { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
     { "preservim/nerdcommenter" },
     { "tpope/vim-sleuth" },
     { "christoomey/vim-tmux-navigator" },
