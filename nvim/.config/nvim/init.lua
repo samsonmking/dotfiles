@@ -313,7 +313,7 @@ vim.keymap.set("n", "<leader>nf", ":NvimTreeFindFile<CR>")
 -- LSP configuration
 require("mason").setup()
 require("mason-lspconfig").setup({
-  ensure_installed = { "pyright", "lua_ls" },
+  ensure_installed = { "pyright", "lua_ls", "tsgo" },
 })
 vim.lsp.config("*", {
   capabilities = require("blink.cmp").get_lsp_capabilities(),
@@ -341,8 +341,12 @@ vim.lsp.config("lua_ls", {
     },
   },
 })
+vim.lsp.config("tsgo", {
+  root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+})
 vim.lsp.enable("pyright")
 vim.lsp.enable("lua_ls")
+vim.lsp.enable("tsgo")
 
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
