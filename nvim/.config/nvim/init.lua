@@ -99,13 +99,6 @@ require("lazy").setup({
         fzf_bin = vim.fn.stdpath("data") .. "/lazy/fzf/bin/fzf",
       },
     },
-    {
-      "elanmed/fzf-lua-frecency.nvim",
-      dependencies = { "ibhagwan/fzf-lua" },
-      config = function()
-        require("fzf-lua-frecency").setup()
-      end,
-    },
 
     { "nvim-tree/nvim-tree.lua", priority = 800 },
     { "nvim-tree/nvim-web-devicons", opt = true }, -- optional, for file icons
@@ -232,7 +225,7 @@ vim.cmd("colorscheme onedark_dark")
 
 -- fzf-lua configuration
 vim.keymap.set("n", "<C-\\>", function()
-  require("fzf-lua-frecency").frecency({ cwd_only = true })
+  require("fzf-lua").buffers()
 end)
 vim.keymap.set("n", "<C-p>", function()
   require("fzf-lua").global()
