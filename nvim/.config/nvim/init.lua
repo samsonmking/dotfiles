@@ -234,6 +234,9 @@ vim.api.nvim_set_keymap("n", "<C-g>", [[<Cmd>lua require"fzf-lua".live_grep_nati
 vim.keymap.set("n", "<leader>gs", function()
   require("fzf-lua").git_status()
 end, { desc = "Git status files" })
+vim.keymap.set("n", "<leader>gd", function()
+  require("fzf-lua").git_diff()
+end, { desc = "Git diff files" })
 vim.keymap.set("n", "<leader>rc", function()
   vim.cmd("source $MYVIMRC")
   vim.notify("Config reloaded")
@@ -365,7 +368,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
 require("conform").setup({
   notify_on_error = false,
   format_on_save = function(bufnr)
-    if vim.bo[bufnr].filetype == "python" then
+    local fts = {
+      "python",
+      "typescript",
+      "typescriptreact",
+      "javascript",
+      "javascriptreact",
+    }
+    if vim.tbl_contains(fts, vim.bo[bufnr].filetype) then
       return { timeout_ms = 500 }
     end
   end,
@@ -375,10 +385,13 @@ require("conform").setup({
   formatters_by_ft = {
     lua = { "stylua" },
     python = { "ruff_organize_imports", "black" },
+    typescript = { "prettier" },
+    typescriptreact = { "prettier" },
+    javascript = { "prettier" },
+    javascriptreact = { "prettier" },
   },
 })
 
 vim.keymap.set("n", "<leader>f", function()
   require("conform").format({ async = true })
 end, { desc = "Format buffer" })
-
