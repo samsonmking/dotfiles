@@ -231,6 +231,9 @@ vim.keymap.set("n", "<C-p>", function()
   require("fzf-lua").global()
 end)
 vim.api.nvim_set_keymap("n", "<C-g>", [[<Cmd>lua require"fzf-lua".live_grep_native()<CR>]], {})
+vim.keymap.set("n", "<leader>gs", function()
+  require("fzf-lua").git_status()
+end, { desc = "Git status files" })
 vim.keymap.set({ "i" }, "<C-x><C-f>", function()
   FzfLua.complete_file({
     winopts = { preview = { hidden = true } },
