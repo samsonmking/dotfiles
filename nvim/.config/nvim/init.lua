@@ -385,10 +385,17 @@ require("conform").setup({
   formatters_by_ft = {
     lua = { "stylua" },
     python = { "ruff_organize_imports", "black" },
-    typescript = { "prettier" },
-    typescriptreact = { "prettier" },
-    javascript = { "prettier" },
-    javascriptreact = { "prettier" },
+    typescript = { "oxfmt" },
+    typescriptreact = { "oxfmt" },
+    javascript = { "oxfmt" },
+    javascriptreact = { "oxfmt" },
+  },
+  formatters = {
+    oxfmt = {
+      command = "oxfmt",
+      args = { "--write", "$FILENAME" },
+      stdin = false,
+    },
   },
 })
 
