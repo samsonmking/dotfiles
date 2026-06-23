@@ -75,8 +75,6 @@ vim.g.clipboard = {
     end,
   },
 }
--- Defer 'clipboard' until after UiEnter to avoid blocking startup on the
--- provider. See kickstart.nvim and `:help 'clipboard'`.
 vim.schedule(function()
   vim.o.clipboard = "unnamedplus"
 end)
@@ -88,117 +86,12 @@ vim.cmd("filetype plugin on")
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
-    -- add your plugins here
-    -- Install fzf binary via plugin (package manager version may be too old for fzf-lua)
-    { "junegunn/fzf", build = "./install --bin" },
-    -- Replace fzf.vim with fzf-lua
-    {
-      "ibhagwan/fzf-lua",
-      dependencies = { "nvim-tree/nvim-web-devicons", "junegunn/fzf" },
-      opts = {
-        fzf_bin = vim.fn.stdpath("data") .. "/lazy/fzf/bin/fzf",
-      },
-    },
-
-    { "nvim-tree/nvim-tree.lua", priority = 800 },
-    { "nvim-tree/nvim-web-devicons", opt = true }, -- optional, for file icons
-    {
-      "nvim-lualine/lualine.nvim",
-      dependencies = { "nvim-tree/nvim-web-devicons" },
-      opts = {
-        options = {
-          theme = "onedark",
-          section_separators = "",
-          component_separators = "",
-        },
-        sections = {
-          lualine_c = { { "filename", path = 1 } },
-          lualine_x = { "filetype" },
-        },
-      },
-    },
-    { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
-    { "preservim/nerdcommenter" },
-    { "tpope/vim-sleuth" },
-    { "christoomey/vim-tmux-navigator" },
-    {
-      "olimorris/onedarkpro.nvim",
-      priority = 1000, -- Ensure it loads first
-    },
-    {
-      "romus204/tree-sitter-manager.nvim",
-      config = function()
-        require("tree-sitter-manager").setup({
-          ensure_installed = { "python", "typescript", "javascript" },
-        })
-      end,
-    },
-    {
-      "MeanderingProgrammer/render-markdown.nvim",
-      dependencies = { "romus204/tree-sitter-manager.nvim", "nvim-tree/nvim-web-devicons" },
-      ---@module 'render-markdown'
-      ---@type render.md.UserConfig
-      opts = {},
-    },
-
-    -- Git
-    {
-      "lewis6991/gitsigns.nvim",
-      opts = {
-        current_line_blame = true,
-        current_line_blame_opts = {
-          delay = 300,
-        },
-        on_attach = function(bufnr)
-          vim.keymap.set(
-            "n",
-            "<leader>hd",
-            require("gitsigns").preview_hunk_inline,
-            { buffer = bufnr, desc = "Preview hunk inline" }
-          )
-          vim.keymap.set("n", "<leader>hr", require("gitsigns").reset_hunk, { buffer = bufnr, desc = "Reset hunk" })
-        end,
-      },
-    },
-
-    -- LSP
-    { "neovim/nvim-lspconfig" },
-    { "mason-org/mason.nvim", opts = {} },
-    { "mason-org/mason-lspconfig.nvim" },
-    {
-      "WhoIsSethDaniel/mason-tool-installer.nvim",
-      opts = {
-        ensure_installed = { "stylua" },
-      },
-    },
-
-    -- Formatting
-    { "stevearc/conform.nvim" },
-
-    -- Completion
-    {
-      "saghen/blink.cmp",
-      version = "1.*",
-      opts = {
-        enabled = function()
-          local disabled = { markdown = true, gitcommit = true }
-          return not disabled[vim.bo.filetype]
-        end,
-        keymap = { preset = "default" },
-        completion = {
-          documentation = { auto_show = true },
-        },
-        sources = {
-          default = { "lsp", "path", "buffer" },
-        },
-        fuzzy = { implementation = "prefer_rust_with_warning" },
-      },
-    },
+    { import = "plugins" },
   },
   checker = {
-    enabled = true, -- Keep the checker enabled
-    frequency = 604800, -- Check once a week (in seconds: 7 * 24 * 60 * 60 = 604800)
-    notify = false, -- Don't display notifications
+    enabled = true,
+    frequency = 604800,
+    notify = false,
   },
   performance = {
     rtp = {
@@ -223,7 +116,48 @@ end
 
 vim.cmd("colorscheme onedark_dark")
 
--- fzf-lua configuration
+-- LSP configuration
+require("mason").setup()
+require("mason-lspconfig").setup({
+  ensure_installed = { "ty", "lua_ls", "tsgo" },
+})
+vim.lsp.config("*", {
+  capabilities = require("blink.cmp").get_lsp_capabilities(),
+})
+vim.lsp.config("ty", {
+  root_markers = { "pyproject.toml", "ty.toml", ".git" },
+})
+vim.lsp.config("lua_ls", {
+  root_markers = { ".luarc.json", ".luarc.jsonc", ".stylua.toml", "stylua.toml", ".git" },
+  settings = {
+    Lua = {
+      runtime = { version = "LuaJIT" },
+      workspace = {
+        library = { vim.env.VIMRUNTIME },
+      },
+    },
+  },
+})
+vim.lsp.config("tsgo", {
+  root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+})
+vim.lsp.enable("ty")
+vim.lsp.enable("lua_ls")
+vim.lsp.enable("tsgo")
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
+  callback = function(event)
+    local map = function(keys, func, desc)
+      vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+    end
+    map("gd", vim.lsp.buf.definition, "Go to definition")
+    map("gD", vim.lsp.buf.declaration, "Go to declaration")
+    map("<leader>e", vim.diagnostic.open_float, "Show diagnostics")
+  end,
+})
+
+-- fzf-lua keymaps
 vim.keymap.set("n", "<C-\\>", function()
   require("fzf-lua").buffers()
 end)
@@ -289,118 +223,6 @@ vim.keymap.set({ "i" }, "<C-x><C-a>", function()
   })
 end, { silent = true, desc = "Fuzzy complete @file" })
 
--- nvim-tree configuration
-require("nvim-tree").setup({
-  sort = {
-    sorter = "case_sensitive",
-  },
-  view = {
-    width = 30,
-  },
-  renderer = {
-    group_empty = true,
-  },
-  filters = {
-    dotfiles = false,
-  },
-  git = {
-    enable = true,
-  },
-  diagnostics = {
-    enable = true,
-    show_on_dirs = true,
-  },
-})
-
 -- nvim-tree keymaps
 vim.keymap.set("n", "<C-n>", ":NvimTreeToggle<CR>")
 vim.keymap.set("n", "<leader>nf", ":NvimTreeFindFile<CR>")
-
--- LSP configuration
-require("mason").setup()
-require("mason-lspconfig").setup({
-  ensure_installed = { "pyright", "lua_ls", "tsgo" },
-})
-vim.lsp.config("*", {
-  capabilities = require("blink.cmp").get_lsp_capabilities(),
-})
-local pyright_root = vim.fs.root(0, { "pyproject.toml", "pyrightconfig.json", ".git" }) or vim.fn.getcwd()
-vim.lsp.config("pyright", {
-  root_markers = { "pyproject.toml", "pyrightconfig.json", ".git" },
-  settings = {
-    python = {
-      analysis = {
-        typeCheckingMode = "off",
-        extraPaths = { pyright_root },
-      },
-    },
-  },
-})
-vim.lsp.config("lua_ls", {
-  root_markers = { ".luarc.json", ".luarc.jsonc", ".stylua.toml", "stylua.toml", ".git" },
-  settings = {
-    Lua = {
-      runtime = { version = "LuaJIT" },
-      workspace = {
-        library = { vim.env.VIMRUNTIME },
-      },
-    },
-  },
-})
-vim.lsp.config("tsgo", {
-  root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
-})
-vim.lsp.enable("pyright")
-vim.lsp.enable("lua_ls")
-vim.lsp.enable("tsgo")
-
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
-  callback = function(event)
-    local map = function(keys, func, desc)
-      vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
-    end
-    map("gd", vim.lsp.buf.definition, "Go to definition")
-    map("gD", vim.lsp.buf.declaration, "Go to declaration")
-    map("<leader>e", vim.diagnostic.open_float, "Show diagnostics")
-  end,
-})
-
--- Formatting
-require("conform").setup({
-  notify_on_error = false,
-  format_on_save = function(bufnr)
-    local fts = {
-      "python",
-      "typescript",
-      "typescriptreact",
-      "javascript",
-      "javascriptreact",
-    }
-    if vim.tbl_contains(fts, vim.bo[bufnr].filetype) then
-      return { timeout_ms = 500 }
-    end
-  end,
-  default_format_opts = {
-    lsp_format = "fallback",
-  },
-  formatters_by_ft = {
-    lua = { "stylua" },
-    python = { "ruff_organize_imports", "black" },
-    typescript = { "oxfmt" },
-    typescriptreact = { "oxfmt" },
-    javascript = { "oxfmt" },
-    javascriptreact = { "oxfmt" },
-  },
-  formatters = {
-    oxfmt = {
-      command = "oxfmt",
-      args = { "--write", "$FILENAME" },
-      stdin = false,
-    },
-  },
-})
-
-vim.keymap.set("n", "<leader>f", function()
-  require("conform").format({ async = true })
-end, { desc = "Format buffer" })
