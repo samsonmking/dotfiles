@@ -1,12 +1,64 @@
 return {
-  { "neovim/nvim-lspconfig" },
-  { "mason-org/mason.nvim", opts = {} },
   {
-    "mason-org/mason-lspconfig.nvim",
-    opts = {
-      ensure_installed = { "ty", "lua_ls", "tsgo" },
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "mason-org/mason.nvim",
+      "mason-org/mason-lspconfig.nvim",
+      "saghen/blink.cmp",
     },
+    config = function()
+      require("mason").setup()
+      require("mason-lspconfig").setup({
+        ensure_installed = { "pyright", "lua_ls", "tsgo" },
+      })
+      vim.lsp.config("*", {
+        capabilities = require("blink.cmp").get_lsp_capabilities(),
+      })
+      local pyright_root = vim.fs.root(0, { "pyproject.toml", "pyrightconfig.json", ".git" }) or vim.fn.getcwd()
+      vim.lsp.config("pyright", {
+        root_markers = { "pyproject.toml", "pyrightconfig.json", ".git" },
+        settings = {
+          python = {
+            analysis = {
+              typeCheckingMode = "off",
+              extraPaths = { pyright_root },
+            },
+          },
+        },
+      })
+      vim.lsp.config("lua_ls", {
+        root_markers = { ".luarc.json", ".luarc.jsonc", ".stylua.toml", "stylua.toml", ".git" },
+        settings = {
+          Lua = {
+            runtime = { version = "LuaJIT" },
+            workspace = {
+              library = { vim.env.VIMRUNTIME },
+            },
+          },
+        },
+      })
+      vim.lsp.config("tsgo", {
+        root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+      })
+      vim.lsp.enable("pyright")
+      vim.lsp.enable("lua_ls")
+      vim.lsp.enable("tsgo")
+
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
+        callback = function(event)
+          local map = function(keys, func, desc)
+            vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+          end
+          map("gd", vim.lsp.buf.definition, "Go to definition")
+          map("gD", vim.lsp.buf.declaration, "Go to declaration")
+          map("<leader>e", vim.diagnostic.open_float, "Show diagnostics")
+        end,
+      })
+    end,
   },
+  { "mason-org/mason.nvim", opts = {} },
+  { "mason-org/mason-lspconfig.nvim" },
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     opts = {

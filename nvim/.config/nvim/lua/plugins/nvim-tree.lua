@@ -23,5 +23,8 @@ return {
         show_on_dirs = true,
       },
     })
+
+    vim.keymap.set("n", "<C-n>", ":NvimTreeToggle<CR>")
+    vim.keymap.set("n", "<leader>nf", ":NvimTreeFindFile<CR>")
   end,
 }
