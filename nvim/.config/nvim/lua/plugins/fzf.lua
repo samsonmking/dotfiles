@@ -5,6 +5,9 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons", "junegunn/fzf" },
     opts = {
       fzf_bin = vim.fn.stdpath("data") .. "/lazy/fzf/bin/fzf",
+      winopts = {
+        preview = { layout = "vertical" },
+      },
     },
     config = function(_, opts)
       require("fzf-lua").setup(opts)
