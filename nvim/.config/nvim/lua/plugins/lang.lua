@@ -87,7 +87,7 @@ return {
             "javascriptreact",
           }
           if vim.tbl_contains(fts, vim.bo[bufnr].filetype) then
-            return { timeout_ms = 500 }
+            return { timeout_ms = 2000 }
           end
         end,
         default_format_opts = {
