@@ -5,6 +5,14 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons", "junegunn/fzf" },
     opts = {
       fzf_bin = vim.fn.stdpath("data") .. "/lazy/fzf/bin/fzf",
+      winopts = {
+        preview = {
+          -- Flip to a vertical (stacked) preview when the fzf window is
+          -- narrower than `flip_columns`, otherwise use a horizontal split.
+          layout = "flex",
+          flip_columns = 170,
+        },
+      },
     },
     config = function(_, opts)
       require("fzf-lua").setup(opts)
