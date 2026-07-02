@@ -24,7 +24,6 @@ return {
       },
     })
 
-    vim.keymap.set("n", "<C-n>", ":NvimTreeToggle<CR>")
-    vim.keymap.set("n", "<leader>nf", ":NvimTreeFindFile<CR>")
+    vim.keymap.set("n", "<C-n>", ":NvimTreeFindFileToggle<CR>")
   end,
 }
