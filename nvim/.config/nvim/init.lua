@@ -24,17 +24,11 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- VSCode + Neovim Options
 vim.opt.ignorecase = true -- Use case insensitive search
 vim.opt.smartcase = true -- Except when using capital letters
 vim.opt.timeout = false
 vim.opt.ttimeout = true
 vim.opt.ttimeoutlen = 10 -- Quickly time out on keycodes, but never time out on mappings
-
--- Exit early if in VSCode
-if vim.g.vscode then
-  return
-end
 
 -- Neovim Options
 vim.opt.number = true -- Show Line numbers
