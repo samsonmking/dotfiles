@@ -17,6 +17,12 @@ return {
   },
   { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
   {
+    "nvim-treesitter/nvim-treesitter-context",
+    opts = {
+      max_lines = 3,
+    },
+  },
+  {
     "navarasu/onedark.nvim",
     priority = 1000,
     opts = { style = "darker" },
