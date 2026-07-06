@@ -43,6 +43,15 @@ create_symlinks() {
     # Ensure stow is installed
     ensure_stow
     
+    # Ensure ~/.config exists as a real directory before stowing packages that
+    # target paths inside it. If it is missing, stow will fold the tree and
+    # create ~/.config -> <package>/.config, pulling unrelated apps into the repo.
+    case "$package" in
+        nvim|vscode|code-flags)
+            mkdir -p "$HOME/.config"
+            ;;
+    esac
+    
     # Use stow to create symlinks
     stow -R -v -d "$SCRIPT_DIR" -t "$HOME" "$package"
     echo "Symlinks created successfully for $package"
