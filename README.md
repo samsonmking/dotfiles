@@ -45,6 +45,12 @@ A collection of configuration files for various development tools. This reposito
 - Sets Neovim as the default editor
 - Custom configuration directory structure with `~/.bashrc.d/`
 
+### Node.js
+- Installs and manages Node.js via [nvm](https://github.com/nvm-sh/nvm)
+- Installs or updates to the latest LTS Node.js release
+- Sets LTS as the default Node.js version
+- Loads nvm automatically from `~/.bashrc.d/`
+
 ### VSCode
 
 > [!NOTE]
@@ -82,6 +88,7 @@ The `setup.sh` script can automate installation and configuration:
 #   nvim              - Install Neovim
 #                       Options:
 #                         --update  Force reinstallation even if already installed
+#   node              - Install or update nvm and the latest LTS Node.js
 #   bash              - Configure bash with custom settings
 #   git               - Configure Git aliases and set Neovim as the default editor
 #   nerdfont          - Install JetBrains Mono Nerd Font

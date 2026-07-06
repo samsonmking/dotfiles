@@ -13,6 +13,9 @@ show_help() {
     echo "  nvim              - Install Neovim"
     echo "                      Options:"
     echo "                        --update  Force reinstallation even if already installed"
+    echo "  node              - Install or update nvm and the latest LTS Node.js"
+    echo "                      Options:"
+    echo "                        --update  Force reinstallation even if already installed"
     echo "  bash              - Configure bash with custom settings"
     echo "  git               - Configure Git with custom aliases"
     echo "  nerdfont          - Install JetBrains Mono Nerd Font"
@@ -140,6 +143,58 @@ nvim_setup() {
     create_symlinks "nvim"
     
     echo "Neovim configuration symlinks created successfully!"
+}
+
+# Function for Node.js via nvm
+node_setup() {
+    UPDATE_FLAG=false
+
+    if [ "$1" = "--update" ]; then
+        UPDATE_FLAG=true
+        echo "Update flag detected. Will reinstall Node.js if it exists."
+    fi
+
+    # Check if node is already installed
+    if command -v node >/dev/null 2>&1 && [ "$UPDATE_FLAG" = false ]; then
+        echo "Node.js is already installed. Use --update flag to force reinstallation."
+        return
+    fi
+
+    echo "Setting up Node.js with nvm..."
+
+    local nvm_dir="${NVM_DIR:-$HOME/.nvm}"
+    local nvm_script="$nvm_dir/nvm.sh"
+
+    if [ -s "$nvm_script" ]; then
+        echo "nvm is already installed. Updating to latest..."
+    else
+        echo "Installing nvm..."
+    fi
+
+    # Install/update nvm from the latest master install script.
+    # PROFILE=/dev/null prevents the installer from appending loader lines to ~/.bashrc,
+    # since we manage shell config via ~/.bashrc.d/ in this repo.
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh |
+        PROFILE=/dev/null bash
+
+    # Load nvm for the current session
+    export NVM_DIR="$nvm_dir"
+    # shellcheck source=/dev/null
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+    # Install latest LTS Node.js
+    echo "Installing latest LTS Node.js..."
+    nvm install --lts
+
+    # Set LTS as default
+    echo "Setting LTS Node.js as default..."
+    nvm alias default 'lts/*'
+
+    # Verify
+    node --version
+    npm --version
+
+    echo "Node.js setup complete!"
 }
 
 # Function for tmux
@@ -314,6 +369,9 @@ case "$1" in
     nvim)
         # Check for --update flag as second argument
         nvim_setup "$2"
+        ;;
+    node)
+        node_setup "$2"
         ;;
     bash)
         bash_setup
