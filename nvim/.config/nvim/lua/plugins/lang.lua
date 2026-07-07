@@ -9,22 +9,13 @@ return {
     config = function()
       require("mason").setup()
       require("mason-lspconfig").setup({
-        ensure_installed = { "pyright", "lua_ls", "tsgo" },
+        ensure_installed = { "lua_ls", "tsgo" },
       })
       vim.lsp.config("*", {
         capabilities = require("blink.cmp").get_lsp_capabilities(),
       })
-      local pyright_root = vim.fs.root(0, { "pyproject.toml", "pyrightconfig.json", ".git" }) or vim.fn.getcwd()
-      vim.lsp.config("pyright", {
-        root_markers = { "pyproject.toml", "pyrightconfig.json", ".git" },
-        settings = {
-          python = {
-            analysis = {
-              typeCheckingMode = "off",
-              extraPaths = { pyright_root },
-            },
-          },
-        },
+      vim.lsp.config("ty", {
+        root_markers = { "ty.toml", ".git" },
       })
       vim.lsp.config("lua_ls", {
         root_markers = { ".luarc.json", ".luarc.jsonc", ".stylua.toml", "stylua.toml", ".git" },
@@ -40,7 +31,8 @@ return {
       vim.lsp.config("tsgo", {
         root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
       })
-      vim.lsp.enable("pyright")
+      vim.lsp.enable("pyright", false)
+      vim.lsp.enable("ty")
       vim.lsp.enable("lua_ls")
       vim.lsp.enable("tsgo")
 
