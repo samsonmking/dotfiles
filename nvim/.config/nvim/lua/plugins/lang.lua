@@ -95,7 +95,7 @@ return {
         },
         formatters_by_ft = {
           lua = { "stylua" },
-          python = { "ruff_organize_imports", "black" },
+          python = { "ruff_organize_imports", "ruff_format" },
           typescript = { "oxfmt" },
           typescriptreact = { "oxfmt" },
           javascript = { "oxfmt" },
