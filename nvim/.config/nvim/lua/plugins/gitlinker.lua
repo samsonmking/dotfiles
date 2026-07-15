@@ -4,7 +4,7 @@ return {
     cmd = "GitLink",
     opts = {},
     keys = {
-      { "<leader>gl", "<cmd>GitLink<cr>", mode = { "n", "v" }, desc = "Yank git permlink to clipboard" },
+      { "<leader>yg", "<cmd>GitLink<cr>", mode = { "n", "v" }, desc = "Yank git permlink to clipboard" },
     },
   },
 }
