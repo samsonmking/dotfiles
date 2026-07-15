@@ -73,6 +73,13 @@ vim.schedule(function()
   vim.o.clipboard = "unnamedplus"
 end)
 
+-- Yank the current file's path (relative to cwd) to the system clipboard
+vim.keymap.set("n", "<leader>yp", function()
+  local path = vim.fn.expand("%:.")
+  vim.fn.setreg("+", path)
+  vim.notify('Yanked "' .. path .. '"')
+end, { desc = "Yank current file path" })
+
 -- Enable filetype detection and plugins
 vim.cmd("filetype on")
 vim.cmd("filetype plugin on")
