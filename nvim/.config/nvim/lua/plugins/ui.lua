@@ -49,6 +49,9 @@ return {
         },
       })
 
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_location = function() return '%2l:%-2v' end
+
       -- The default MiniStatuslineFilename fg is a dim grey; bump it to the
       -- brighter palette fg so the path stands out. Reapply on ColorScheme so
       -- colorscheme load order can't clobber it.
