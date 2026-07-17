@@ -2,7 +2,7 @@ return {
   { "junegunn/fzf", build = "./install --bin" },
   {
     "ibhagwan/fzf-lua",
-    dependencies = { "nvim-tree/nvim-web-devicons", "junegunn/fzf" },
+    dependencies = { "nvim-mini/mini.icons", "junegunn/fzf" },
     opts = {
       fzf_bin = vim.fn.stdpath("data") .. "/lazy/fzf/bin/fzf",
       winopts = {
