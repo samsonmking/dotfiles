@@ -48,6 +48,16 @@ return {
           end,
         },
       })
+
+      -- The default MiniStatuslineFilename fg is a dim grey; bump it to the
+      -- brighter palette fg so the path stands out. Reapply on ColorScheme so
+      -- colorscheme load order can't clobber it.
+      local function set_filename_hl()
+        local palette = require("onedark.palette").darker
+        vim.api.nvim_set_hl(0, "MiniStatuslineFilename", { fg = palette.fg, bg = palette.bg1, bold = true })
+      end
+      vim.api.nvim_create_autocmd("ColorScheme", { pattern = "*", callback = set_filename_hl })
+      set_filename_hl()
     end,
   },
   { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
