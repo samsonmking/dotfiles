@@ -20,7 +20,7 @@ return {
         dotfiles = false,
       },
       git = {
-        enable = true,
+        enable = false,
       },
       diagnostics = {
         enable = true,
