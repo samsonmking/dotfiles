@@ -66,6 +66,14 @@ install_nvim_appimage() {
     ARCH=$(uname -m)
     
     echo "Installing Neovim from AppImage for $ARCH architecture..."
+
+    # unzip is required for lazy.nvim to extract plugins
+    if ! command -v unzip >/dev/null 2>&1; then
+        if command -v apt-get >/dev/null 2>&1; then
+            echo "Installing unzip..."
+            sudo apt-get install -y unzip
+        fi
+    fi
     
     if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
         # ARM64 architecture
