@@ -59,9 +59,12 @@ return {
   },
   {
     "romus204/tree-sitter-manager.nvim",
+    -- develop branch is required until version 1.1.0 to workaround
+    -- https://github.com/romus204/tree-sitter-manager.nvim/issues/189
+    branch = "develop",
     config = function()
       require("tree-sitter-manager").setup({
-        ensure_installed = { "python", "typescript", "tsx", "javascript", "jsx", "graphql" },
+        auto_install = true,
       })
     end,
   },
