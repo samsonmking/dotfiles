@@ -65,6 +65,10 @@ return {
     config = function()
       require("tree-sitter-manager").setup({
         auto_install = true,
+        -- Don't auto-install parsers when nvim runs as git's editor (e.g.
+        -- `git commit`): git leaks GIT_INDEX_FILE into the parser clone, whose
+        -- checkout then fails with "Unable to create .git/index.lock".
+        noauto_install = { "gitcommit", "git_rebase" },
       })
     end,
   },
