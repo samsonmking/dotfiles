@@ -65,10 +65,23 @@ return {
     config = function()
       require("tree-sitter-manager").setup({
         auto_install = true,
-        -- Don't auto-install parsers when nvim runs as git's editor (e.g.
-        -- `git commit`): git leaks GIT_INDEX_FILE into the parser clone, whose
-        -- checkout then fails with "Unable to create .git/index.lock".
-        noauto_install = { "gitcommit", "git_rebase" },
+        -- Skip parsers that either break auto-install or already ship built in:
+        --   - gitcommit/git_rebase: when nvim runs as git's editor (e.g.
+        --     `git commit`), git leaks GIT_INDEX_FILE into the parser clone,
+        --     whose checkout then fails with "Unable to create .git/index.lock".
+        --   - c/lua/markdown/markdown_inline/query/vim/vimdoc: bundled with
+        --     Neovim 0.12+ (see /usr/lib/nvim/parser), so no install needed.
+        noauto_install = {
+          "gitcommit",
+          "git_rebase",
+          "c",
+          "lua",
+          "markdown",
+          "markdown_inline",
+          "query",
+          "vim",
+          "vimdoc",
+        },
       })
     end,
   },
