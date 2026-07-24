@@ -3,5 +3,7 @@ return {
   dependencies = { "romus204/tree-sitter-manager.nvim", "nvim-mini/mini.icons" },
   ---@module 'render-markdown'
   ---@type render.md.UserConfig
-  opts = {},
+  opts = {
+    sign = { enabled = false },
+  },
 }
