@@ -17,7 +17,7 @@ show_help() {
     echo "                      Options:"
     echo "                        --update  Force reinstallation even if already installed"
     echo "  bash              - Configure bash with custom settings"
-    echo "  git               - Configure Git with custom aliases"
+    echo "  git               - Configure Git aliases, delta pager, and Neovim as editor"
     echo "  nerdfont          - Install JetBrains Mono Nerd Font"
     echo "  terminal-colors   - Install terminal color schemes"
     echo "  help              - Show this help message"
@@ -307,17 +307,72 @@ ensure_fzf() {
     fi
 }
 
+# Helper function to install delta (syntax-highlighting pager for git)
+ensure_delta() {
+    if command -v delta >/dev/null 2>&1; then
+        echo "delta is already installed"
+        return
+    fi
+
+    echo "delta is not installed. Installing it now..."
+
+    if command -v dnf >/dev/null 2>&1; then
+        sudo dnf install -y git-delta
+    elif command -v apt-get >/dev/null 2>&1; then
+        # Debian/Ubuntu repos often lack git-delta, so install the release .deb
+        DELTA_VERSION=$(curl -fsSL https://api.github.com/repos/dandavison/delta/releases/latest |
+            grep -m1 '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+
+        if [ -z "$DELTA_VERSION" ]; then
+            echo "Error: Unable to determine the latest delta release."
+            exit 1
+        fi
+
+        # Detect architecture
+        ARCH=$(uname -m)
+        if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+            DELTA_ARCH=arm64
+        else
+            DELTA_ARCH=amd64
+        fi
+
+        DELTA_DEB=$(mktemp --suffix=.deb)
+        echo "Installing delta $DELTA_VERSION for $DELTA_ARCH..."
+        wget -O "$DELTA_DEB" \
+            "https://github.com/dandavison/delta/releases/download/${DELTA_VERSION}/git-delta_${DELTA_VERSION}_${DELTA_ARCH}.deb"
+        sudo dpkg -i "$DELTA_DEB"
+        rm -f "$DELTA_DEB"
+    else
+        echo "Error: Unable to install delta. Unsupported package manager."
+        exit 1
+    fi
+}
+
 # Function for Git configuration
 git_setup() {
     echo "Setting up Git configuration..."
-    
+
     # Ensure fzf is installed (needed for recent-switch alias)
     ensure_fzf
-    
+
+    # Ensure delta is installed (used as the git pager)
+    ensure_delta
+
     # Configure Git aliases using git config --global
     echo "Configuring Git aliases..."
     git config --global alias.recent-switch '!f() { git checkout $(git branch --sort=-committerdate | fzf); }; f'
     git config --global alias.rsw 'recent-switch'
+
+    # Configure delta as the pager for diffs
+    echo "Configuring delta as the Git pager..."
+    git config --global core.pager delta
+    git config --global interactive.diffFilter 'delta --color-only'
+    git config --global delta.navigate true
+    git config --global delta.line-numbers true
+    git config --global delta.side-by-side true
+    git config --global delta.dark true
+    git config --global delta.syntax-theme OneHalfDark
+    git config --global merge.conflictStyle zdiff3
 
     # Set Neovim as the default Git editor
     echo "Setting Neovim as the default Git editor..."

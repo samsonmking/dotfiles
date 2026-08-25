@@ -69,6 +69,11 @@ A collection of configuration files for various development tools. This reposito
 ### Git
 - Custom aliases for recent branch navigation using fzf (`git recent-switch` / `git rsw`)
 - Sets Neovim as the default Git editor
+- Installs [delta](https://github.com/dandavison/delta) and sets it as the pager for diffs:
+  * Side-by-side view with line numbers
+  * Onedark syntax theme (`OneHalfDark`), matching the Neovim colorscheme
+  * `n` / `N` to navigate between diff hunks
+  * `zdiff3` merge conflict style
 
 ### Obsidian
 - Vim keybindings for Obsidian note-taking app:
@@ -90,7 +95,7 @@ The `setup.sh` script can automate installation and configuration:
 #                         --update  Force reinstallation even if already installed
 #   node              - Install or update nvm and the latest LTS Node.js
 #   bash              - Configure bash with custom settings
-#   git               - Configure Git aliases and set Neovim as the default editor
+#   git               - Configure Git aliases, delta pager, and Neovim as editor
 #   nerdfont          - Install JetBrains Mono Nerd Font
 #   terminal-colors   - Install terminal color schemes
 ```
