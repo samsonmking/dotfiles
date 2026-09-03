@@ -48,6 +48,7 @@ vim.opt.swapfile = false -- Disable swp files
 vim.opt.compatible = false -- Ignore vi compatability
 vim.opt.spelllang = "en_us"
 vim.opt.spell = true
+vim.opt.cursorline = true
 
 -- Yank to system clipboard via OSC52 (forwarded by tmux → Ghostty → host).
 -- Paste is intentionally not wired through OSC52: tmux intercepts OSC52 reads
