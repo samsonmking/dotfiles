@@ -143,6 +143,63 @@ migrate_legacy_treesitter_queries() {
     done
 }
 
+# Return success when npm can install global packages without elevated
+# permissions. Version managers generally provide a user-writable prefix,
+# while distro-provided npm commonly uses a root-owned prefix such as /usr.
+npm_global_prefix_is_writable() {
+    local prefix=$1
+    local path
+
+    if [ -z "$prefix" ] || [ ! -w "$prefix" ]; then
+        return 1
+    fi
+
+    for path in \
+        "$prefix/bin" \
+        "$prefix/lib" \
+        "$prefix/lib/node_modules"
+    do
+        if [ -e "$path" ] && [ ! -w "$path" ]; then
+            return 1
+        fi
+    done
+}
+
+# Install the tree-sitter CLI without assuming a particular Node.js manager.
+ensure_tree_sitter_cli() {
+    local npm_prefix
+    local user_prefix="$HOME/.local"
+
+    if command -v tree-sitter >/dev/null 2>&1; then
+        echo "tree-sitter CLI is already installed"
+        return
+    fi
+
+    echo "Installing tree-sitter CLI..."
+    if ! command -v npm >/dev/null 2>&1; then
+        echo "Error: npm is required to install tree-sitter-cli."
+        exit 1
+    fi
+
+    npm_prefix=$(npm prefix -g 2>/dev/null || true)
+    if npm_global_prefix_is_writable "$npm_prefix"; then
+        npm install -g tree-sitter-cli
+    else
+        echo "npm's global prefix is not user-writable; installing under $user_prefix..."
+        npm install -g --prefix "$user_prefix" tree-sitter-cli
+
+        case ":$PATH:" in
+            *":$user_prefix/bin:"*) ;;
+            *) export PATH="$user_prefix/bin:$PATH" ;;
+        esac
+    fi
+
+    if ! command -v tree-sitter >/dev/null 2>&1; then
+        echo "Error: tree-sitter CLI was installed but is not available on PATH."
+        exit 1
+    fi
+}
+
 # Function for Neovim
 nvim_setup() {
     UPDATE_FLAG=false
@@ -174,20 +231,8 @@ nvim_setup() {
         fi
     fi
     
-    # Install tree-sitter CLI (required by tree-sitter-manager.nvim)
-    if ! command -v tree-sitter >/dev/null 2>&1; then
-        echo "Installing tree-sitter CLI..."
-        if command -v npm >/dev/null 2>&1; then
-            npm install -g tree-sitter-cli
-        elif command -v cargo >/dev/null 2>&1; then
-            cargo install tree-sitter-cli
-        else
-            echo "Error: Neither npm nor cargo found. Install one of them to get tree-sitter-cli."
-            exit 1
-        fi
-    else
-        echo "tree-sitter CLI is already installed"
-    fi
+    # Install tree-sitter CLI (required by tree-sitter-manager.nvim).
+    ensure_tree_sitter_cli
 
     # fzf-lua uses the system fzf binary.
     ensure_fzf

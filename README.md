@@ -32,7 +32,7 @@ The Neovim configuration is contained in a single `init.lua`. Plugins are instal
 - Diagnostics use virtual text, severity sorting, warning-and-higher underlines, rounded floating windows, and automatic floats after diagnostic jumps.
 - Tree-sitter parsers are installed automatically by tree-sitter-manager when a supported filetype is opened.
 - Neovim's bundled parsers are reused instead of being installed again.
-- Installing additional parsers requires Git, the tree-sitter CLI, and a C compiler; `setup.sh nvim` installs the CLI through npm or Cargo when needed.
+- Installing additional parsers requires Git, the tree-sitter CLI, and a C compiler. `setup.sh nvim` installs the CLI through npm when needed. It uses npm's global prefix when that location is user-writable; otherwise it installs under `~/.local` without requiring sudo.
 
 LSP keybindings:
 

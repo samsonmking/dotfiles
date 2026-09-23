@@ -2,6 +2,14 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Make user-local tools installed by setup.sh available to Neovim, including
+-- GUI sessions that do not inherit the shell's PATH configuration.
+local local_bin = vim.fn.expand("~/.local/bin")
+local path_entries = vim.split(vim.env.PATH or "", ":", { plain = true })
+if vim.fn.isdirectory(local_bin) == 1 and not vim.tbl_contains(path_entries, local_bin) then
+  vim.env.PATH = local_bin .. ":" .. (vim.env.PATH or "")
+end
+
 -- Disable built-in plugins that are unused or replaced.
 vim.g.loaded_2html_plugin = 1
 vim.g.loaded_gzip = 1
