@@ -147,6 +147,9 @@ nvim_setup() {
         echo "tree-sitter CLI is already installed"
     fi
 
+    # fzf-lua uses the system fzf binary.
+    ensure_fzf
+
     # Create symlinks (stow will automatically create the required directories)
     create_symlinks "nvim"
     
@@ -290,22 +293,49 @@ unset rc
     echo "Bash configuration files have been successfully linked."
 }
 
-# Helper function to install fzf
-ensure_fzf() {
-    if ! command -v fzf >/dev/null 2>&1; then
-        echo "fzf is not installed. Installing it now..."
-        if command -v apt-get >/dev/null 2>&1; then
-            sudo apt-get update && sudo apt-get install -y fzf
-        elif command -v dnf >/dev/null 2>&1; then
-            sudo dnf install -y fzf
-        else
-            echo "Error: Unable to install fzf. Unsupported package manager."
-            exit 1
-        fi
-    else
-        echo "fzf is already installed"
+# Helper function to install the fzf version used by Neovim and Git aliases
+ensure_fzf() (
+    local fzf_version="0.74.0"
+    local current_version=""
+
+    if command -v fzf >/dev/null 2>&1; then
+        current_version=$(fzf --version | awk '{print $1}')
     fi
-}
+
+    if [ "$current_version" = "$fzf_version" ]; then
+        echo "fzf $fzf_version is already installed"
+        return
+    fi
+
+    local machine_arch
+    local fzf_arch
+    machine_arch=$(uname -m)
+    case "$machine_arch" in
+        x86_64)
+            fzf_arch="amd64"
+            ;;
+        aarch64|arm64)
+            fzf_arch="arm64"
+            ;;
+        *)
+            echo "Error: Unsupported architecture for fzf: $machine_arch"
+            exit 1
+            ;;
+    esac
+
+    local archive="fzf-${fzf_version}-linux_${fzf_arch}.tar.gz"
+    local release_url="https://github.com/junegunn/fzf/releases/download/v${fzf_version}"
+    local fzf_tmp_dir
+    fzf_tmp_dir=$(mktemp -d)
+    trap 'rm -rf "$fzf_tmp_dir"' EXIT
+
+    echo "Installing fzf $fzf_version for $fzf_arch..."
+    wget -O "$fzf_tmp_dir/$archive" "$release_url/$archive"
+
+    tar -xzf "$fzf_tmp_dir/$archive" -C "$fzf_tmp_dir"
+    sudo install -m 0755 "$fzf_tmp_dir/fzf" /usr/local/bin/fzf
+    echo "fzf $fzf_version installed successfully"
+)
 
 # Helper function to install delta (syntax-highlighting pager for git)
 ensure_delta() {

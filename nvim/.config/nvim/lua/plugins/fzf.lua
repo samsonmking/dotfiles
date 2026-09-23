@@ -1,10 +1,8 @@
 return {
-  { "junegunn/fzf", build = "./install --bin" },
   {
     "ibhagwan/fzf-lua",
-    dependencies = { "nvim-mini/mini.icons", "junegunn/fzf" },
+    dependencies = { "nvim-mini/mini.icons" },
     opts = {
-      fzf_bin = vim.fn.stdpath("data") .. "/lazy/fzf/bin/fzf",
       winopts = {
         preview = {
           -- Flip to a vertical (stacked) preview when the fzf window is

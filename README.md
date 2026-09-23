@@ -6,7 +6,7 @@ A collection of configuration files for various development tools. This reposito
 ### Neovim
 - A minimal configuration with sensible defaults. The focus is on providing a productive environment for editing small projects in the terminal, without requiring a lot of dependencies. Specific features include:
   * File navigation with nvim-tree
-  * Fuzzy finder with fzf-lua, including:
+  * Fuzzy finder with fzf-lua using the pinned `fzf` installed by `setup.sh`, including:
     - `<C-p>` -> find files
     - `<C-g>` -> grep project
     - `<C-\>` -> switch buffers
