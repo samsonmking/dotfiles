@@ -14,7 +14,7 @@ Each package directory mirrors the paths it will occupy relative to `$HOME`:
 
 | Package      | Links to                              | What it configures |
 |--------------|---------------------------------------|--------------------|
-| `nvim/`      | `~/.config/nvim/`                     | Neovim (Lua config, lazy.nvim plugins) |
+| `nvim/`      | `~/.config/nvim/`                     | Neovim (single-file Lua config, built-in package manager) |
 | `tmux/`      | `~/.tmux.conf`                        | tmux |
 | `bash/`      | `~/.bashrc.d/`                        | Bash (sourced via `~/.bashrc.d/`) |
 | `vscode/`    | `~/.config/Code/User/`                | VSCode settings & keybindings |
@@ -29,7 +29,7 @@ Git is configured imperatively (aliases + default editor) by `setup.sh git`, not
 - **Adding a new file** to a package: the file will be picked up on the next `stow -R` (i.e. `./setup.sh <package>`).
 - **Adding a new package**: create a directory mirroring the target `$HOME` layout, then add a corresponding `*_setup()` function and `case` entry in `setup.sh`, plus a `create_symlinks "<package>"` call.
 - **`setup.sh` must be idempotent** unless otherwise specified: running any command repeatedly should be safe and converge to the same state (e.g. detect already-installed tools, guard against duplicate edits to files like `~/.bashrc`). Preserve this property when adding or modifying setup logic.
-- **Neovim plugins** are managed by lazy.nvim; `nvim/.config/nvim/lazy-lock.json` pins versions. Plugin specs live in `nvim/.config/nvim/lua/plugins/`.
+- **Neovim plugins** are managed by the built-in `vim.pack`; `nvim/.config/nvim/nvim-pack-lock.json` pins versions. Plugin specs and setup live in `nvim/.config/nvim/init.lua`.
 - Keep `README.md` in sync when adding or meaningfully changing a component — it documents each component's features and keybindings for humans.
 
 ## Commit conventions

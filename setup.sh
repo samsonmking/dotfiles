@@ -67,14 +67,6 @@ install_nvim_appimage() {
     
     echo "Installing Neovim from AppImage for $ARCH architecture..."
 
-    # unzip is required for lazy.nvim to extract plugins
-    if ! command -v unzip >/dev/null 2>&1; then
-        if command -v apt-get >/dev/null 2>&1; then
-            echo "Installing unzip..."
-            sudo apt-get install -y unzip
-        fi
-    fi
-    
     if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
         # ARM64 architecture
         NVIM_RELEASE=https://github.com/neovim/neovim/releases/download/stable/nvim-linux-arm64.appimage
@@ -99,6 +91,56 @@ install_nvim_appimage() {
     fi
     
     echo "Neovim installation completed via AppImage!"
+}
+
+# Remove plugin clones and state left behind by lazy.nvim.
+cleanup_legacy_lazy() {
+    local nvim_data="${XDG_DATA_HOME:-$HOME/.local/share}/nvim"
+    local nvim_state="${XDG_STATE_HOME:-$HOME/.local/state}/nvim"
+    local path
+
+    for path in \
+        "$nvim_data/lazy" \
+        "$nvim_data/lazy-rocks" \
+        "$nvim_state/lazy"
+    do
+        if [ -d "$path" ]; then
+            echo "Removing legacy lazy.nvim files from $path..."
+            rm -rf -- "$path"
+        fi
+    done
+}
+
+# Retarget tree-sitter query links created before migrating from lazy.nvim.
+migrate_legacy_treesitter_queries() {
+    local nvim_data="${XDG_DATA_HOME:-$HOME/.local/share}/nvim"
+    local query_dir="$nvim_data/site/queries"
+    local legacy_root="$nvim_data/lazy/tree-sitter-manager.nvim/runtime/queries"
+    local native_root="$nvim_data/site/pack/core/opt/tree-sitter-manager.nvim/runtime/queries"
+    local query_path
+    local target
+    local language
+
+    if [ ! -d "$query_dir" ] || [ ! -d "$native_root" ]; then
+        return
+    fi
+
+    for query_path in "$query_dir"/*; do
+        if [ ! -L "$query_path" ]; then
+            continue
+        fi
+
+        target=$(readlink "$query_path")
+        case "$target" in
+            "$legacy_root"/*)
+                language=${target#"$legacy_root"/}
+                if [ -d "$native_root/$language" ]; then
+                    echo "Migrating Tree-sitter queries for $language..."
+                    ln -sfn -- "$native_root/$language" "$query_path"
+                fi
+                ;;
+        esac
+    done
 }
 
 # Function for Neovim
@@ -152,7 +194,15 @@ nvim_setup() {
 
     # Create symlinks (stow will automatically create the required directories)
     create_symlinks "nvim"
-    
+
+    # Install and load the locked native packages before removing lazy.nvim.
+    echo "Installing and validating Neovim plugins..."
+    nvim --headless \
+        "+lua if not vim.g.dotfiles_config_loaded then vim.cmd.cquit() end" \
+        "+qa"
+    migrate_legacy_treesitter_queries
+    cleanup_legacy_lazy
+
     echo "Neovim configuration symlinks created successfully!"
 }
 

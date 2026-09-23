@@ -4,7 +4,7 @@ A collection of configuration files for various development tools. This reposito
 ## Components
 
 ### Neovim
-- A minimal configuration with sensible defaults. The focus is on providing a productive environment for editing small projects in the terminal, without requiring a lot of dependencies. Specific features include:
+- A single-file Neovim 0.12+ configuration using the built-in `vim.pack` package manager and a committed lockfile. The focus is on providing a productive environment for editing small projects in the terminal, without requiring a lot of dependencies. Specific features include:
   * File navigation with nvim-tree
   * Fuzzy finder with fzf-lua using the pinned `fzf` installed by `setup.sh`, including:
     - `<C-p>` -> find files
@@ -13,11 +13,11 @@ A collection of configuration files for various development tools. This reposito
     - `<C-x><C-f>` (insert) -> fuzzy complete file path
     - `<C-x><C-g>` (insert) -> fuzzy insert git commit hash
     - `<C-x><C-a>` (insert) -> fuzzy complete `@file` reference
-  * `onedark_dark` color scheme via onedarkpro.nvim
+  * Darker onedark color scheme via onedark.nvim
   * Markdown rendering with render-markdown.nvim
   * Treesitter for improved syntax highlighting
   * Integration with tmux via vim-tmux-navigator
-  * Indentation detection (vim-sleuth) and `<leader>f` to reindent the buffer
+  * Indentation detection with vim-sleuth and formatting with conform.nvim via `<leader>f`
   * Yank to the host clipboard over SSH via OSC52 (forwarded by tmux to the outer terminal)
 
 ### Tmux
