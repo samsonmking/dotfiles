@@ -8,7 +8,7 @@ Personal development environment configuration managed with [GNU Stow](https://w
 | --- | --- | --- |
 | `nvim` | `~/.config/nvim` | Neovim 0.12+ configuration |
 | `tmux` | `~/.tmux.conf` | tmux configuration |
-| `bash` | `~/.bashrc.d` | Bash history, editor, and nvm setup |
+| `bash` | `~/.bashrc.d` | Bash history and editor setup |
 | `vscode` | `~/.config/Code/User` | VSCode settings and keybindings |
 | `code-flags` | `~/.config/code-flags.conf` | VSCode Wayland flags |
 | `obsidian` | `~/.obsidian.vimrc` | Obsidian Vim keybindings |
@@ -151,9 +151,8 @@ The Bash package expects `~/.bashrc` to source files from `~/.bashrc.d`; `./setu
 - Up/down-arrow prefix search through history.
 - History is appended after every command.
 - Neovim is exported as `$EDITOR`.
-- nvm and its Bash completion are loaded when installed.
 
-`./setup.sh node` installs or updates nvm, installs the latest Node.js LTS release, and makes that LTS line the default.
+`./setup.sh node` installs or updates nvm, installs the latest Node.js LTS release, and makes that LTS line the default. The nvm installer updates the active Bash or Zsh profile, so this command does not require `./setup.sh bash`.
 
 ## VSCode
 
@@ -211,7 +210,7 @@ Available commands:
 | `./setup.sh nvim [--update]` | Install or update Neovim, tree-sitter CLI, pinned fzf, native plugins, and links |
 | `./setup.sh tmux` | Install tmux and TPM, then link the configuration |
 | `./setup.sh bash` | Configure `~/.bashrc.d` loading and link Bash files |
-| `./setup.sh node [--update]` | Install or update nvm and the latest Node.js LTS |
+| `./setup.sh node` | Install or update nvm and the latest Node.js LTS |
 | `./setup.sh git` | Configure Git aliases, delta, merge style, pager, and editor |
 | `./setup.sh nerdfont` | Install JetBrains Mono Nerd Font |
 | `./setup.sh terminal-colors` | Run the Gogh terminal color-scheme installer |

@@ -14,8 +14,6 @@ show_help() {
     echo "                      Options:"
     echo "                        --update  Force reinstallation even if already installed"
     echo "  node              - Install or update nvm and the latest LTS Node.js"
-    echo "                      Options:"
-    echo "                        --update  Force reinstallation even if already installed"
     echo "  bash              - Configure bash with custom settings"
     echo "  git               - Configure Git aliases, delta pager, and Neovim as editor"
     echo "  nerdfont          - Install JetBrains Mono Nerd Font"
@@ -253,17 +251,10 @@ nvim_setup() {
 
 # Function for Node.js via nvm
 node_setup() {
-    UPDATE_FLAG=false
-
-    if [ "$1" = "--update" ]; then
-        UPDATE_FLAG=true
-        echo "Update flag detected. Will reinstall Node.js if it exists."
-    fi
-
-    # Check if node is already installed
-    if command -v node >/dev/null 2>&1 && [ "$UPDATE_FLAG" = false ]; then
-        echo "Node.js is already installed. Use --update flag to force reinstallation."
-        return
+    if [ "$#" -ne 0 ]; then
+        echo "Error: The node command does not accept options."
+        echo "Usage: $0 node"
+        exit 1
     fi
 
     echo "Setting up Node.js with nvm..."
@@ -277,16 +268,25 @@ node_setup() {
         echo "Installing nvm..."
     fi
 
-    # Install/update nvm from the latest master install script.
-    # PROFILE=/dev/null prevents the installer from appending loader lines to ~/.bashrc,
-    # since we manage shell config via ~/.bashrc.d/ in this repo.
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh |
-        PROFILE=/dev/null bash
+    # Install/update nvm and let its installer add the loader to the active
+    # Bash or Zsh profile. This keeps the node command independent of the
+    # optional Bash configuration package in this repository.
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
 
     # Load nvm for the current session
     export NVM_DIR="$nvm_dir"
+    if [ ! -s "$nvm_script" ]; then
+        echo "Error: nvm installation did not create $nvm_script."
+        exit 1
+    fi
+
     # shellcheck source=/dev/null
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    \. "$nvm_script"
+
+    if ! command -v nvm >/dev/null 2>&1; then
+        echo "Error: nvm was installed but could not be loaded."
+        exit 1
+    fi
 
     # Install latest LTS Node.js
     echo "Installing latest LTS Node.js..."
@@ -295,6 +295,7 @@ node_setup() {
     # Set LTS as default
     echo "Setting LTS Node.js as default..."
     nvm alias default 'lts/*'
+    nvm use default
 
     # Verify
     node --version
@@ -559,7 +560,7 @@ case "$1" in
         nvim_setup "$2"
         ;;
     node)
-        node_setup "$2"
+        node_setup "${@:2}"
         ;;
     bash)
         bash_setup
