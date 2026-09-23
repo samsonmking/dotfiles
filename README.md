@@ -5,7 +5,12 @@ A collection of configuration files for various development tools. This reposito
 
 ### Neovim
 - A single-file Neovim 0.12+ configuration using the built-in `vim.pack` package manager and a committed lockfile. The focus is on providing a productive environment for editing small projects in the terminal, without requiring a lot of dependencies. Specific features include:
-  * `:PackUpdate[!] [plugin...]` and `:PackDelete[!] plugin...` commands with plugin-name completion
+  * Plugin management commands with plugin-name completion:
+    - `:PackUpdate` -> review updates for all plugins; use `:write` to apply or `:quit` to cancel
+    - `:PackUpdate plugin...` -> review updates for specific plugins
+    - `:PackUpdate! [plugin...]` -> apply updates immediately without review
+    - `:PackDelete plugin...` -> delete inactive plugins
+    - `:PackDelete! plugin...` -> delete plugins even when active in the current session
   * File navigation with nvim-tree
   * Fuzzy finder with fzf-lua using the pinned `fzf` installed by `setup.sh`, including:
     - `<C-p>` -> find files
