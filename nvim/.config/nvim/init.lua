@@ -95,6 +95,43 @@ vim.pack.add({
   { src = gh("christoomey/vim-tmux-navigator") },
 }, { load = true, confirm = false })
 
+-- Temporary command shims for Neovim versions before :packupdate and
+-- :packdel are available as built-in commands.
+local function complete_packages(arg_lead)
+  return vim
+    .iter(vim.pack.get(nil, { info = false }))
+    :map(function(pack)
+      return pack.spec.name
+    end)
+    :filter(function(name)
+      return name:find(arg_lead, 1, true) ~= nil
+    end)
+    :totable()
+end
+
+if vim.fn.exists(":packupdate") == 0 then
+  vim.api.nvim_create_user_command("PackUpdate", function(info)
+    local names = #info.fargs > 0 and info.fargs or nil
+    vim.pack.update(names, { force = info.bang })
+  end, {
+    desc = "Update plugins",
+    nargs = "*",
+    bang = true,
+    complete = complete_packages,
+  })
+end
+
+if vim.fn.exists(":packdel") == 0 then
+  vim.api.nvim_create_user_command("PackDelete", function(info)
+    vim.pack.del(info.fargs, { force = info.bang })
+  end, {
+    desc = "Delete plugins",
+    nargs = "+",
+    bang = true,
+    complete = complete_packages,
+  })
+end
+
 -- Appearance
 require("mini.icons").setup()
 require("mini.icons").mock_nvim_web_devicons()
