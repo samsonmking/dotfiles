@@ -63,7 +63,7 @@ Use `<leader>f` to format the current buffer manually. `ruff` and `oxfmt` must b
 | `<C-g>` | Search project text |
 | `<C-\>` | Switch buffers |
 | `<leader>gs` | Browse files from Git status in fullscreen |
-| `<leader>gd` | Browse files from the Git diff in fullscreen |
+| `<leader>gf` | Browse the current file's Git history in fullscreen |
 | `<leader>sh` | Search help tags |
 | `<leader>sk` | Search keybindings |
 | `<leader>rc` | Reload `init.lua` |
@@ -81,6 +81,7 @@ fzf-lua uses the system `fzf` binary. `setup.sh nvim` installs the pinned versio
 
 ### Git integration
 
+- File history follows renames and previews each commit's diff. In the history picker, press Enter to open the historical file, or `Ctrl-v` to open it in a vertical split.
 - gitsigns displays changes and current-line blame.
 - `<leader>hd` previews the current hunk inline.
 - `<leader>hr` resets the current hunk.
