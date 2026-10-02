@@ -141,7 +141,7 @@ Additional behavior:
 - Scrollback history is increased to 100,000 lines.
 - The status bar displays the session, windows, and hostname.
 
-After the first `./setup.sh tmux`, press `prefix + I` inside tmux to install the configured TPM plugins.
+`./setup.sh tmux` automatically installs configured TPM plugins after linking the configuration. Repeated runs install missing plugins and skip those already installed. In an existing tmux session, use `prefix + r` to load newly installed plugins. TPM's `prefix + I` remains available for manual installation.
 
 ## Bash and Node.js
 
@@ -209,7 +209,7 @@ Available commands:
 | Command | Description |
 | --- | --- |
 | `./setup.sh nvim [--update]` | Install or update Neovim, tree-sitter CLI, pinned fzf, native plugins, and links |
-| `./setup.sh tmux` | Install tmux and TPM, then link the configuration |
+| `./setup.sh tmux` | Install tmux and TPM, link the configuration, and install configured plugins |
 | `./setup.sh bash` | Configure `~/.bashrc.d` loading and link Bash files |
 | `./setup.sh node` | Install or update nvm and the latest Node.js LTS |
 | `./setup.sh git` | Configure Git aliases, delta, merge style, pager, and editor |

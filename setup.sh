@@ -9,7 +9,7 @@ show_help() {
     echo "Usage: $0 COMMAND [OPTIONS]"
     echo ""
     echo "Available commands:"
-    echo "  tmux              - Install tmux and tmux plugin manager"
+    echo "  tmux              - Install tmux, TPM, and configured plugins"
     echo "  nvim              - Install Neovim"
     echo "                      Options:"
     echo "                        --update  Force reinstallation even if already installed"
@@ -344,6 +344,9 @@ tmux_setup() {
     
     # Create symlinks
     create_symlinks "tmux"
+
+    echo "Installing configured tmux plugins..."
+    "$TPM_PATH/bin/install_plugins"
     
     echo "tmux installation complete!"
 }
