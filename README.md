@@ -59,9 +59,9 @@ Use `<leader>f` to format the current buffer manually. `ruff` and `oxfmt` must b
 | Key | Action |
 | --- | --- |
 | `<C-n>` | Toggle nvim-tree and reveal the current file |
-| `<C-p>` | Open the fzf-lua global picker for files, buffers, and symbols |
+| `<C-p>` | Open the fzf-lua global picker for files, buffers, and symbols in fullscreen |
 | `<C-g>` | Search project text |
-| `<C-\>` | Switch buffers |
+| `<C-\>` | Switch buffers in fullscreen |
 | `<leader>gs` | Browse files from Git status in fullscreen |
 | `<leader>gf` | Browse the current file's Git history in fullscreen |
 | `<leader>sh` | Search help tags |

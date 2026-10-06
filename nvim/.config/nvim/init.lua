@@ -243,10 +243,10 @@ require("fzf-lua").setup({
 })
 
 vim.keymap.set("n", "<C-\\>", function()
-  require("fzf-lua").buffers()
+  require("fzf-lua").buffers({ winopts = { fullscreen = true } })
 end)
 vim.keymap.set("n", "<C-p>", function()
-  require("fzf-lua").global()
+  require("fzf-lua").global({ winopts = { fullscreen = true } })
 end)
 vim.keymap.set("n", "<C-g>", function()
   require("fzf-lua").live_grep()
