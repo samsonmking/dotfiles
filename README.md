@@ -67,7 +67,7 @@ Use `<leader>f` to format the current buffer manually. `ruff` and `oxfmt` must b
 | `<leader>sh` | Search help tags |
 | `<leader>sk` | Search keybindings |
 | `<leader>rc` | Reload `init.lua` |
-| `<leader>yp` | Copy the current file's relative path |
+| `<leader>yf` | Copy the current file's relative path |
 
 Insert-mode completion:
 
@@ -86,6 +86,7 @@ fzf-lua uses the system `fzf` binary. `setup.sh nvim` installs the pinned versio
 - `<leader>hd` previews the current hunk inline.
 - `<leader>hr` resets the current hunk.
 - `<leader>yg` copies a permalink for the current line or visual selection.
+- `<leader>yp` copies the current line's blamed GitHub PR URL. Wait for the blame annotation to appear before using it. It recognizes commit messages ending in `(#12345)` and `Merge pull request #12345 …`, using the same repository remote as `<leader>yg`. Lookup is local; messages without a PR number produce a notification.
 
 ### Appearance and editing
 

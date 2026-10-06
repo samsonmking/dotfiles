@@ -335,6 +335,51 @@ require("gitsigns").setup({
 
 vim.keymap.set({ "n", "v" }, "<leader>yg", "<cmd>GitLink<cr>", { desc = "Yank git permalink to clipboard" })
 
+--[[
+Copy the PR URL from gitsigns' current-line blame without querying GitHub.
+Require blame to match the cursor line so its update delay cannot cause us to
+copy the previous line's PR. Recognize GitHub squash messages ending in (#12345)
+and merge messages starting with "Merge pull request #12345 ".
+Reuse gitlinker's remote selection and SSH alias resolution to build the GitHub
+URL, then copy it through the existing system clipboard (OSC52) configuration.
+Missing blame or PR numbers and unsupported remotes leave the clipboard unchanged.
+]]
+vim.keymap.set("n", "<leader>yp", function()
+  local blame = vim.b.gitsigns_blame_line_dict
+  if not blame or blame.final_lnum ~= vim.api.nvim_win_get_cursor(0)[1] then
+    vim.notify("Wait for blame on the current line to appear, then retry", vim.log.levels.WARN)
+    return
+  end
+  if not blame.sha or blame.sha:match("^0+$") then
+    vim.notify("The current line has not been committed", vim.log.levels.WARN)
+    return
+  end
+
+  local summary = blame.summary or ""
+  local pr = summary:match("%(#([1-9]%d*)%)%s*$")
+    or summary:match("^Merge pull request #([1-9]%d*)%s")
+  if not pr then
+    vim.notify("No PR number found in the blamed commit message", vim.log.levels.WARN)
+    return
+  end
+
+  require("gitlinker").link({
+    rev = blame.sha,
+    message = false,
+    highlight_duration = 0,
+    router = function(link)
+      if link.host ~= "github.com" then
+        error("PR URL copying only supports github.com remotes", 0)
+      end
+      return ("https://github.com/%s/%s/pull/%s"):format(link.org, link.repo:gsub("%.git$", ""), pr)
+    end,
+    action = function(url)
+      vim.fn.setreg("+", url)
+      vim.notify('Yanked "' .. url .. '"')
+    end,
+  })
+end, { desc = "Yank blamed PR URL" })
+
 -- Completion and language tooling
 require("blink.cmp").setup({
   enabled = function()
@@ -486,7 +531,7 @@ vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<cr>", { silent = true })
 vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<cr>", { silent = true })
 vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<cr>", { silent = true })
 
-vim.keymap.set("n", "<leader>yp", function()
+vim.keymap.set("n", "<leader>yf", function()
   local path = vim.fn.expand("%:.")
   vim.fn.setreg("+", path)
   vim.notify('Yanked "' .. path .. '"')
