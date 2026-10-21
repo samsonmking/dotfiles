@@ -9,6 +9,11 @@
       "rev": "619363c30309d29ffa631e67c8183f2a72caa373",
       "src": "https://github.com/stevearc/conform.nvim.git"
     },
+    "fzf": {
+      "rev": "6765f464a60e39afc20775f54f7ba40896bf1b81",
+      "src": "https://github.com/junegunn/fzf.git",
+      "version": "'v0.74.0'"
+    },
     "fzf-lua": {
       "rev": "532d463f5c83595192fe740572d8fd6902b2217a",
       "src": "https://github.com/ibhagwan/fzf-lua.git"
@@ -48,6 +53,10 @@
     "mini.statusline": {
       "rev": "127997ebef7ef632161203b960c5ef9d158f4810",
       "src": "https://github.com/nvim-mini/mini.statusline.git"
+    },
+    "nvim-bqf": {
+      "rev": "c282a62bec6c0621a1ef5132aa3f4c9fc4dcc2c7",
+      "src": "https://github.com/kevinhwang91/nvim-bqf.git"
     },
     "nvim-lspconfig": {
       "rev": "e7ca2c95ba316a8b846d3f3546d407908c5c4ccb",

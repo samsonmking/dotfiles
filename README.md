@@ -79,6 +79,49 @@ Insert-mode completion:
 
 fzf-lua uses the system `fzf` binary. `setup.sh nvim` installs the pinned version expected by this configuration.
 
+### Quickfix and location lists
+
+nvim-bqf adds automatic previews and window sizing to quickfix and location lists, including the diagnostics list opened with `<leader>q`. Open a populated quickfix list with `:copen`, or a location list with `:lopen`.
+
+These keys apply inside the list window:
+
+| Key | Action |
+| --- | --- |
+| `Enter` | Open the current item |
+| `o` | Open the current item and close the list |
+| `Ctrl-x` / `Ctrl-v` / `t` | Open in a horizontal split, vertical split, or new tab |
+| `Ctrl-p` / `Ctrl-n` | Jump to the previous or next file in the list |
+| `p` / `P` | Toggle the current preview or automatic previews |
+| `Ctrl-b` / `Ctrl-f` | Scroll the preview up or down |
+| `zp` | Toggle the preview's maximum size |
+| `Tab` / `Shift-Tab` | Mark an item and move down or up |
+| `zn` / `zN` | Filter to marked or unmarked items |
+| `<` / `>` | Move through list history |
+| `zf` | Fuzzy-filter the list with fzf |
+
+The `zf` filter uses the `junegunn/fzf` Vim integration, pinned to the same version as the system binary installed by `setup.sh nvim`. Select multiple entries in the filter to create a new list.
+
+#### Find and replace across search results
+
+1. Press `Ctrl-g` and search for `old`.
+2. Press `Alt-a` to select all results, then `Alt-q` to send them to quickfix.
+3. Optionally narrow the list: mark entries with `Tab`, then press `zn` to create a list containing only marked entries. Press `<` to return to the previous list.
+4. Replace every occurrence of `old` on the result lines and save each changed file:
+
+   ```vim
+   :cdo s/old/new/ge | update
+   ```
+
+Use `:cdo s/old/new/gce | update` to confirm each replacement. The `g` flag replaces all occurrences on a line, `c` asks for confirmation, and `e` skips lines where the pattern no longer matches.
+
+To replace throughout the entire files represented in the current quickfix list:
+
+```vim
+:cfdo %s/old/new/ge | update
+```
+
+`old` is a Vim regular expression; escape special characters when searching for literal text. `:cdo` applies the replacement to result lines, while `:cfdo %s` applies it to all lines in each listed file. Both commands save changes with `update`, which also triggers this configuration's format-on-save behavior for supported filetypes.
+
 ### Git integration
 
 - File history follows renames and previews each commit's diff. In the history picker, press Enter to open the historical file, or `Ctrl-v` to open it in a vertical split.

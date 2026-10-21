@@ -89,6 +89,9 @@ vim.pack.add({
   { src = gh("nvim-treesitter/nvim-treesitter-context") },
   { src = gh("nvim-tree/nvim-tree.lua") },
   { src = gh("ibhagwan/fzf-lua") },
+  -- bqf's zf filter needs fzf's Vim integration alongside the system binary.
+  { src = gh("junegunn/fzf"), version = "v0.74.0" },
+  { src = gh("kevinhwang91/nvim-bqf") },
   { src = gh("lewis6991/gitsigns.nvim") },
   { src = gh("linrongbin16/gitlinker.nvim") },
   { src = gh("mason-org/mason.nvim") },
@@ -315,6 +318,11 @@ vim.keymap.set("i", "<C-x><C-a>", function()
     },
   })
 end, { silent = true, desc = "Fuzzy complete @file" })
+
+-- Quickfix and location lists
+require("bqf").setup({
+  auto_resize_height = true,
+})
 
 -- Git
 require("gitsigns").setup({
