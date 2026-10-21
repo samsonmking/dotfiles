@@ -139,6 +139,7 @@ Additional behavior:
 - Windows and panes are numbered from 1 and windows are renumbered automatically.
 - Vi-style copy mode uses `v` to select, `Ctrl-v` for rectangular selection, and `y` to copy.
 - Mouse support, true color, styled underlines, extended keys, focus events, and OSC52 forwarding are enabled.
+- Extended keys are always forwarded, including to applications that do not request them. After changing this setting, reload the configuration and open a new pane.
 - Scrollback history is increased to 100,000 lines.
 - The status bar displays the session, windows, and hostname.
 
