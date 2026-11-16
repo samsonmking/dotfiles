@@ -168,7 +168,9 @@ ensure_tree_sitter_cli() {
     local npm_prefix
     local user_prefix="$HOME/.local"
 
-    if command -v tree-sitter >/dev/null 2>&1; then
+    # Version-manager shims can exist even when the active version does not
+    # provide the CLI. Check that it runs before skipping installation.
+    if tree-sitter --version >/dev/null 2>&1; then
         echo "tree-sitter CLI is already installed"
         return
     fi
@@ -192,8 +194,8 @@ ensure_tree_sitter_cli() {
         esac
     fi
 
-    if ! command -v tree-sitter >/dev/null 2>&1; then
-        echo "Error: tree-sitter CLI was installed but is not available on PATH."
+    if ! tree-sitter --version >/dev/null 2>&1; then
+        echo "Error: tree-sitter CLI was installed but cannot run from PATH."
         exit 1
     fi
 }
