@@ -340,6 +340,16 @@ require("gitsigns").setup({
     delay = 300,
   },
   on_attach = function(bufnr)
+    for _, hunk in ipairs({ { "]c", "next" }, { "[c", "prev" } }) do
+      local key, direction = hunk[1], hunk[2]
+      vim.keymap.set("n", key, function()
+        if vim.wo.diff then
+          vim.cmd.normal({ key, bang = true })
+        else
+          require("gitsigns").nav_hunk(direction)
+        end
+      end, { buffer = bufnr, desc = "Jump to " .. direction .. " hunk" })
+    end
     vim.keymap.set(
       "n",
       "<leader>hd",

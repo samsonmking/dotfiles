@@ -126,6 +126,7 @@ To replace throughout the entire files represented in the current quickfix list:
 
 - File history follows renames and previews each commit's diff. In the history picker, press Enter to open the historical file, or `Ctrl-v` to open it in a vertical split.
 - gitsigns displays changes and current-line blame.
+- `]c` and `[c` jump to the next and previous Git hunks in the current buffer. In diff mode, they use Neovim’s built-in diff navigation.
 - `<leader>hd` previews the current hunk inline.
 - `<leader>hr` resets the current hunk.
 - `<leader>yg` copies a permalink for the current line or visual selection.
