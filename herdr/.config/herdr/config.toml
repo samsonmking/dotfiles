@@ -1,0 +1,48 @@
+onboarding = false
+[terminal]
+new_cwd = "follow"
+
+[keys]
+prefix = "alt+space"
+reload_config = "prefix+r"
+split_vertical = "prefix+%"
+split_horizontal = 'prefix+"'
+previous_tab = ["alt+h", "alt+o", "prefix+p"]
+next_tab = ["alt+l", "alt+i", "prefix+n"]
+switch_tab = "alt+1..9"
+move_tab_previous = "alt+shift+h"
+move_tab_next = "alt+shift+l"
+resize_pane_left = "ctrl+alt+h"
+resize_pane_down = "ctrl+alt+j"
+resize_pane_up = "ctrl+alt+k"
+resize_pane_right = "ctrl+alt+l"
+
+[[keys.command]]
+key = "ctrl+h"
+type = "plugin_action"
+command = "herdr-navigator.left"
+description = "Navigate left across Neovim and Herdr"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "plugin_action"
+command = "herdr-navigator.down"
+description = "Navigate down across Neovim and Herdr"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "plugin_action"
+command = "herdr-navigator.up"
+description = "Navigate up across Neovim and Herdr"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "plugin_action"
+command = "herdr-navigator.right"
+description = "Navigate right across Neovim and Herdr"
+
+[[keys.command]]
+key = "prefix+ctrl+l"
+type = "shell"
+command = '"$HERDR_BIN_PATH" pane send-keys "$HERDR_ACTIVE_PANE_ID" ctrl+l'
+description = "Clear shell screen"

@@ -9,6 +9,7 @@ show_help() {
     echo "Usage: $0 COMMAND [OPTIONS]"
     echo ""
     echo "Available commands:"
+    echo "  herdr             - Link Herdr config and install the navigation plugin"
     echo "  tmux              - Install tmux, TPM, and configured plugins"
     echo "  nvim              - Install Neovim"
     echo "                      Options:"
@@ -306,6 +307,41 @@ node_setup() {
     echo "Node.js setup complete!"
 }
 
+herdr_setup() {
+    local version plugins
+    if ! command -v herdr >/dev/null; then
+        echo "Herdr 0.9.1 or newer is required." >&2
+        return 1
+    fi
+    version=$(herdr --version | awk '{print $2}')
+    if ! awk -F. '$1 > 0 || $2 > 9 || ($2 == 9 && $3 + 0 >= 1) {ok=1} END {exit !ok}' <<< "$version"; then
+        echo "Run herdr update to install Herdr 0.9.1 or newer." >&2
+        return 1
+    fi
+
+    if ! command -v jq >/dev/null 2>&1; then
+        echo "Installing jq for Herdr Navigator..."
+        if command -v apt-get >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y jq
+        elif command -v dnf >/dev/null 2>&1; then
+            sudo dnf install -y jq
+        else
+            echo "Install jq manually, then rerun ./setup.sh herdr." >&2
+            return 1
+        fi
+    fi
+
+    mkdir -p "$HOME/.config/herdr"
+    create_symlinks herdr
+    plugins=$(herdr plugin list --json)
+    if ! jq -e '.result.plugins[] | select(.plugin_id == "herdr-navigator")' <<< "$plugins" >/dev/null; then
+        # Match the Neovim revision in nvim-pack-lock.json.
+        herdr plugin install --yes --ref ec68f1a95a98e2174bb7467f72dc5a0b176b18be kaar/nvim-herdr-navigator
+    fi
+    herdr config check
+}
+
 # Function for tmux
 tmux_setup() {
     echo "Installing tmux and its plugins..."
@@ -557,6 +593,9 @@ terminal_colors_setup() {
 
 # Main execution
 case "$1" in
+    herdr)
+        herdr_setup
+        ;;
     tmux)
         tmux_setup
         ;;

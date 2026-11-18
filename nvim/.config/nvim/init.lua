@@ -106,6 +106,15 @@ vim.pack.add({
   { src = gh("christoomey/vim-tmux-navigator") },
 }, { load = true, confirm = false })
 
+-- Load pane navigation and agent annotations only inside Herdr so tmux keeps its own navigator.
+if vim.env.HERDR_ENV == "1" then
+  vim.pack.add({
+    { src = gh("kaar/nvim-herdr-navigator") },
+    { src = gh("ChmaraX/herdr-nvim") },
+  }, { load = true, confirm = false })
+  require("herdr-nvim").setup({})
+end
+
 -- Temporary command shims for Neovim versions before :packupdate and
 -- :packdel are available as built-in commands.
 local function complete_packages(arg_lead)
@@ -534,10 +543,13 @@ local render_markdown_opts = {
 require("render-markdown").setup(render_markdown_opts)
 
 -- Navigation and general keymaps
-vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<cr>", { silent = true })
-vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<cr>", { silent = true })
-vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<cr>", { silent = true })
-vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<cr>", { silent = true })
+-- Herdr Navigator supplies these mappings in Herdr.
+if vim.env.HERDR_ENV ~= "1" then
+  vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<cr>", { silent = true })
+  vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<cr>", { silent = true })
+  vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<cr>", { silent = true })
+  vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<cr>", { silent = true })
+end
 
 vim.keymap.set("n", "<leader>yf", function()
   local path = vim.fn.expand("%:.")

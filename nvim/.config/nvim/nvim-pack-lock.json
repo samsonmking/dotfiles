@@ -26,6 +26,10 @@
       "rev": "31d6fb2d618bca1482b9f274751ead5f03461408",
       "src": "https://github.com/lewis6991/gitsigns.nvim.git"
     },
+    "herdr-nvim": {
+      "rev": "2905408e1985db1a319b466ba9873f40e29f5e7a",
+      "src": "https://github.com/ChmaraX/herdr-nvim.git"
+    },
     "indent-blankline.nvim": {
       "rev": "d28a3f70721c79e3c5f6693057ae929f3d9c0a03",
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim.git"
@@ -57,6 +61,10 @@
     "nvim-bqf": {
       "rev": "c282a62bec6c0621a1ef5132aa3f4c9fc4dcc2c7",
       "src": "https://github.com/kevinhwang91/nvim-bqf.git"
+    },
+    "nvim-herdr-navigator": {
+      "rev": "ec68f1a95a98e2174bb7467f72dc5a0b176b18be",
+      "src": "https://github.com/kaar/nvim-herdr-navigator.git"
     },
     "nvim-lspconfig": {
       "rev": "e7ca2c95ba316a8b846d3f3546d407908c5c4ccb",

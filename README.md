@@ -157,6 +157,17 @@ The temporary user commands below provide a convenient interface until their bui
 
 In the update review buffer, use `:write` to apply the selected updates or `:quit` to cancel. Commit the resulting `nvim-pack-lock.json` change after updating. A deleted plugin that remains in `init.lua` will be installed again on the next startup.
 
+## Herdr
+
+Run `./setup.sh herdr` to link the config and install Herdr Navigator. Requires Herdr 0.9.1 or newer. Setup installs `jq` with apt-get or dnf if it is missing. Apply the config with `herdr server reload-config`.
+
+- **Alt+Space** is the prefix. Then `%` splits right, `"` splits down, and `r` reloads.
+- **Alt+h/o** and **Alt+l/i** switch tabs. **Alt+1–9** selects a tab. **Alt+Shift+h/l** reorders it.
+- **Ctrl+Alt+h/j/k/l** resizes panes. **Ctrl+h/j/k/l** navigates across panes and Neovim splits in Normal mode. **Prefix then Ctrl+l** clears the shell screen.
+- Review changes with `git diff`, then open the changed file in Neovim. Select lines and press **Space a c** to comment, **Space a l** to manage comments, or **Space a i** to insert a source reference. **Space a s** pastes the batch into the agent’s input for review. **Space a Shift+s** submits it immediately.
+
+The tmux bindings for Alt+0, the pane-swap key table, equalization, and vi copy mode have no equivalents configured here.
+
 ## tmux
 
 The tmux package uses TPM with tmux-sensible, vim-tmux-navigator, and tmux-yank.
