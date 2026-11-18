@@ -9,7 +9,7 @@ show_help() {
     echo "Usage: $0 COMMAND [OPTIONS]"
     echo ""
     echo "Available commands:"
-    echo "  herdr             - Link Herdr config and install the navigation plugin"
+    echo "  herdr             - Install Herdr if missing, link config, and install the navigation plugin"
     echo "  tmux              - Install tmux, TPM, and configured plugins"
     echo "  nvim              - Install Neovim"
     echo "                      Options:"
@@ -309,9 +309,21 @@ node_setup() {
 
 herdr_setup() {
     local version plugins
-    if ! command -v herdr >/dev/null; then
-        echo "Herdr 0.9.1 or newer is required." >&2
-        return 1
+    if ! command -v herdr >/dev/null 2>&1; then
+        if [ ! -x "$HOME/.local/bin/herdr" ]; then
+            echo "Installing Herdr..."
+            if ! (set -o pipefail; curl -fsSL https://herdr.dev/install.sh | sh); then
+                echo "Herdr installation failed." >&2
+                return 1
+            fi
+        fi
+        if ! command -v herdr >/dev/null 2>&1; then
+            export PATH="$HOME/.local/bin:$PATH"
+        fi
+        if ! command -v herdr >/dev/null 2>&1; then
+            echo "Herdr could not be found after installation." >&2
+            return 1
+        fi
     fi
     version=$(herdr --version | awk '{print $2}')
     if ! awk -F. '$1 > 0 || $2 > 9 || ($2 == 9 && $3 + 0 >= 1) {ok=1} END {exit !ok}' <<< "$version"; then

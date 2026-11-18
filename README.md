@@ -159,7 +159,7 @@ In the update review buffer, use `:write` to apply the selected updates or `:qui
 
 ## Herdr
 
-Run `./setup.sh herdr` to link the config and install Herdr Navigator. Requires Herdr 0.9.1 or newer. Setup installs `jq` with apt-get or dnf if it is missing. Apply the config with `herdr server reload-config`.
+Run `./setup.sh herdr` to install Herdr if missing, link the config, and install Herdr Navigator. Existing Herdr installations must be version 0.9.1 or newer. Setup installs `jq` with apt-get or dnf if it is missing. Apply the config with `herdr server reload-config`.
 
 - **Alt+Space** is the prefix. Then `%` splits right, `"` splits down, and `r` reloads.
 - **Alt+h/o** and **Alt+l/i** switch tabs. **Alt+1–9** selects a tab. **Alt+Shift+h/l** reorders it.
