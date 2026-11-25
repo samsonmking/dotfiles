@@ -1,4 +1,9 @@
 onboarding = false
+
+[update]
+version_check = false
+manifest_check = false
+
 [terminal]
 new_cwd = "follow"
 
@@ -19,26 +24,26 @@ resize_pane_right = "ctrl+alt+l"
 
 [[keys.command]]
 key = "ctrl+h"
-type = "plugin_action"
-command = "herdr-navigator.left"
+type = "shell"
+command = 'sh "$HOME/.config/herdr/navigate.sh" left'
 description = "Navigate left across Neovim and Herdr"
 
 [[keys.command]]
 key = "ctrl+j"
-type = "plugin_action"
-command = "herdr-navigator.down"
+type = "shell"
+command = 'sh "$HOME/.config/herdr/navigate.sh" down'
 description = "Navigate down across Neovim and Herdr"
 
 [[keys.command]]
 key = "ctrl+k"
-type = "plugin_action"
-command = "herdr-navigator.up"
+type = "shell"
+command = 'sh "$HOME/.config/herdr/navigate.sh" up'
 description = "Navigate up across Neovim and Herdr"
 
 [[keys.command]]
 key = "ctrl+l"
-type = "plugin_action"
-command = "herdr-navigator.right"
+type = "shell"
+command = 'sh "$HOME/.config/herdr/navigate.sh" right'
 description = "Navigate right across Neovim and Herdr"
 
 [[keys.command]]

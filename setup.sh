@@ -9,7 +9,7 @@ show_help() {
     echo "Usage: $0 COMMAND [OPTIONS]"
     echo ""
     echo "Available commands:"
-    echo "  herdr             - Install Herdr if missing, link config, and install the navigation plugin"
+    echo "  herdr             - Install Herdr if missing and link config and pane navigation"
     echo "  tmux              - Install tmux, TPM, and configured plugins"
     echo "  nvim              - Install Neovim"
     echo "                      Options:"
@@ -308,7 +308,13 @@ node_setup() {
 }
 
 herdr_setup() {
-    local version plugins
+    local version config="$HOME/.config/herdr/config.toml"
+    if [ -f "$config" ] && [ ! -L "$config" ]; then
+        printf 'Herdr setup found an existing config at %s.\n' "$config" >&2
+        echo "Move it to a backup location, then rerun ./setup.sh herdr." >&2
+        return 1
+    fi
+
     if ! command -v herdr >/dev/null 2>&1; then
         if [ ! -x "$HOME/.local/bin/herdr" ]; then
             echo "Installing Herdr..."
@@ -325,14 +331,16 @@ herdr_setup() {
             return 1
         fi
     fi
-    version=$(herdr --version | awk '{print $2}')
-    if ! awk -F. '$1 > 0 || $2 > 9 || ($2 == 9 && $3 + 0 >= 1) {ok=1} END {exit !ok}' <<< "$version"; then
-        echo "Run herdr update to install Herdr 0.9.1 or newer." >&2
+    version=$(herdr --version)
+    if ! awk -F '[ .]' '/^herdr [0-9]+\.[0-9]+\.[0-9]+/ {
+        if ($2 + 0 > 0 || $3 + 0 > 8 || ($3 + 0 == 8 && $4 + 0 >= 2)) ok=1
+    } END {exit !ok}' <<< "$version"; then
+        echo "Herdr 0.8.2 or newer is required for pane navigation (found $version)." >&2
         return 1
     fi
 
     if ! command -v jq >/dev/null 2>&1; then
-        echo "Installing jq for Herdr Navigator..."
+        echo "Installing jq for Herdr pane navigation..."
         if command -v apt-get >/dev/null 2>&1; then
             sudo apt-get update
             sudo apt-get install -y jq
@@ -344,14 +352,9 @@ herdr_setup() {
         fi
     fi
 
+    HERDR_CONFIG_PATH="$SCRIPT_DIR/herdr/.config/herdr/config.toml" herdr config check
     mkdir -p "$HOME/.config/herdr"
     create_symlinks herdr
-    plugins=$(herdr plugin list --json)
-    if ! jq -e '.result.plugins[] | select(.plugin_id == "herdr-navigator")' <<< "$plugins" >/dev/null; then
-        # Match the Neovim revision in nvim-pack-lock.json.
-        herdr plugin install --yes --ref ec68f1a95a98e2174bb7467f72dc5a0b176b18be kaar/nvim-herdr-navigator
-    fi
-    herdr config check
 }
 
 # Function for tmux

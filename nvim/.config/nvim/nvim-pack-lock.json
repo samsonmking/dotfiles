@@ -62,10 +62,6 @@
       "rev": "c282a62bec6c0621a1ef5132aa3f4c9fc4dcc2c7",
       "src": "https://github.com/kevinhwang91/nvim-bqf.git"
     },
-    "nvim-herdr-navigator": {
-      "rev": "ec68f1a95a98e2174bb7467f72dc5a0b176b18be",
-      "src": "https://github.com/kaar/nvim-herdr-navigator.git"
-    },
     "nvim-lspconfig": {
       "rev": "e7ca2c95ba316a8b846d3f3546d407908c5c4ccb",
       "src": "https://github.com/neovim/nvim-lspconfig.git"

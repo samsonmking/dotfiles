@@ -106,10 +106,9 @@ vim.pack.add({
   { src = gh("christoomey/vim-tmux-navigator") },
 }, { load = true, confirm = false })
 
--- Load pane navigation and agent annotations only inside Herdr so tmux keeps its own navigator.
-if vim.env.HERDR_ENV == "1" then
+local in_herdr = vim.env.HERDR_ENV == "1"
+if in_herdr then
   vim.pack.add({
-    { src = gh("kaar/nvim-herdr-navigator") },
     { src = gh("ChmaraX/herdr-nvim") },
   }, { load = true, confirm = false })
   require("herdr-nvim").setup({})
@@ -553,8 +552,25 @@ local render_markdown_opts = {
 require("render-markdown").setup(render_markdown_opts)
 
 -- Navigation and general keymaps
--- Herdr Navigator supplies these mappings in Herdr.
-if vim.env.HERDR_ENV ~= "1" then
+if in_herdr then
+  for key, direction in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
+    vim.keymap.set("n", "<C-" .. key .. ">", function()
+      local win = vim.api.nvim_get_current_win()
+      vim.cmd.wincmd(key)
+      if vim.api.nvim_get_current_win() == win then
+        vim.system(
+          { "herdr", "pane", "focus", "--current", "--direction", direction },
+          { text = true },
+          vim.schedule_wrap(function(result)
+            if result.code ~= 0 then
+              vim.notify("Herdr pane focus failed: " .. vim.trim(result.stderr or ""), vim.log.levels.WARN)
+            end
+          end)
+        )
+      end
+    end, { desc = "Navigate " .. direction .. " across Neovim and Herdr" })
+  end
+else
   vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<cr>", { silent = true })
   vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<cr>", { silent = true })
   vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<cr>", { silent = true })

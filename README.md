@@ -7,6 +7,7 @@ Personal development environment configuration managed with [GNU Stow](https://w
 | Package | Destination | Description |
 | --- | --- | --- |
 | `nvim` | `~/.config/nvim` | Neovim 0.12+ configuration |
+| `herdr` | `~/.config/herdr` | Herdr configuration and pane navigation |
 | `tmux` | `~/.tmux.conf` | tmux configuration |
 | `bash` | `~/.bashrc.d` | Bash history and editor setup |
 | `vscode` | `~/.config/Code/User` | VSCode settings and keybindings |
@@ -139,7 +140,7 @@ To replace throughout the entire files represented in the current quickfix list:
 - Cursor-line and cursor-word highlighting.
 - Indentation guides and automatic indentation detection with vim-sleuth.
 - Markdown rendering with render-markdown.nvim.
-- Seamless `<C-h/j/k/l>` navigation between Neovim splits and tmux panes.
+- Seamless `<C-h/j/k/l>` navigation between Neovim splits and Herdr or tmux panes.
 - English spell checking.
 - Per-project `.nvim.lua` files through the `exrc` option.
 - OSC52 copy support for remote sessions through tmux and the outer terminal. Paste uses terminal bracketed paste instead.
@@ -160,11 +161,13 @@ In the update review buffer, use `:write` to apply the selected updates or `:qui
 
 ## Herdr
 
-Run `./setup.sh herdr` to install Herdr if missing, link the config, and install Herdr Navigator. Existing Herdr installations must be version 0.9.1 or newer. Setup installs `jq` with apt-get or dnf if it is missing. Apply the config with `herdr server reload-config`.
+Run `./setup.sh herdr` to use an existing Herdr 0.8.2 or newer, or install Herdr if missing. Setup links the config and navigation script and installs `jq` with apt-get or dnf if needed. If setup reports an existing `~/.config/herdr/config.toml`, move that file to a backup location and rerun setup. The linked config keeps background version and manifest checks disabled. Apply the config to a running session with `herdr server reload-config`.
+
+If you previously used the `nvim-herdr-navigator` plugin, open a new Neovim session and run `:PackDelete nvim-herdr-navigator` to remove the old checkout.
 
 - **Alt+Space** is the prefix. Then `%` splits right, `"` splits down, and `r` reloads.
 - **Alt+h/o** and **Alt+l/i** switch tabs. **Alt+1–9** selects a tab. **Alt+Shift+h/l** reorders it.
-- **Ctrl+Alt+h/j/k/l** resizes panes. **Ctrl+h/j/k/l** navigates across panes and Neovim splits in Normal mode. **Prefix then Ctrl+l** clears the shell screen.
+- **Ctrl+Alt+h/j/k/l** resizes panes. **Ctrl+h/j/k/l** moves between Neovim splits in Normal mode and hands off to Herdr at the edge. In shell panes it moves directly to the neighboring pane. **Prefix then Ctrl+l** clears the shell screen.
 - Review changes with `git diff`, then open the changed file in Neovim. Select lines and press **Space a c** to comment, **Space a l** to manage comments, or **Space a i** to insert a source reference. **Space a s** pastes the batch into the agent’s input for review. **Space a Shift+s** submits it immediately.
 
 The tmux bindings for Alt+0, the pane-swap key table, equalization, and vi copy mode have no equivalents configured here.
