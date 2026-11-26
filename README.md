@@ -161,7 +161,7 @@ In the update review buffer, use `:write` to apply the selected updates or `:qui
 
 ## Herdr
 
-Run `./setup.sh herdr` to use an existing Herdr 0.8.2 or newer, or install Herdr if missing. Setup links the config and navigation script and installs `jq` with apt-get or dnf if needed. If setup reports an existing `~/.config/herdr/config.toml`, move that file to a backup location and rerun setup. The linked config keeps background version and manifest checks disabled. Apply the config to a running session with `herdr server reload-config`.
+Run `./setup.sh herdr` to install Herdr if missing and link the configuration. Setup validates the config against the installed Herdr. The full set of keybindings requires Herdr 0.8.2 or newer. Setup installs `jq` with apt-get or dnf if needed. It moves an existing regular config file to `~/.config/herdr/config.toml.backup`, replacing any previous backup. The linked config keeps background version and manifest checks disabled. Apply the config to a running session with `herdr server reload-config`.
 
 If you previously used the `nvim-herdr-navigator` plugin, open a new Neovim session and run `:PackDelete nvim-herdr-navigator` to remove the old checkout.
 

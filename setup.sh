@@ -308,12 +308,7 @@ node_setup() {
 }
 
 herdr_setup() {
-    local version config="$HOME/.config/herdr/config.toml"
-    if [ -f "$config" ] && [ ! -L "$config" ]; then
-        printf 'Herdr setup found an existing config at %s.\n' "$config" >&2
-        echo "Move it to a backup location, then rerun ./setup.sh herdr." >&2
-        return 1
-    fi
+    local backup config="$HOME/.config/herdr/config.toml"
 
     if ! command -v herdr >/dev/null 2>&1; then
         if [ ! -x "$HOME/.local/bin/herdr" ]; then
@@ -331,11 +326,8 @@ herdr_setup() {
             return 1
         fi
     fi
-    version=$(herdr --version)
-    if ! awk -F '[ .]' '/^herdr [0-9]+\.[0-9]+\.[0-9]+/ {
-        if ($2 + 0 > 0 || $3 + 0 > 8 || ($3 + 0 == 8 && $4 + 0 >= 2)) ok=1
-    } END {exit !ok}' <<< "$version"; then
-        echo "Herdr 0.8.2 or newer is required for pane navigation (found $version)." >&2
+    if ! HERDR_CONFIG_PATH="$SCRIPT_DIR/herdr/.config/herdr/config.toml" herdr config check; then
+        echo "Herdr could not validate the config. The full keybinding set requires Herdr 0.8.2 or newer." >&2
         return 1
     fi
 
@@ -352,8 +344,15 @@ herdr_setup() {
         fi
     fi
 
-    HERDR_CONFIG_PATH="$SCRIPT_DIR/herdr/.config/herdr/config.toml" herdr config check
+    # Keep the Herdr config directory real so Stow links the individual files.
     mkdir -p "$HOME/.config/herdr"
+    if [ -f "$config" ] && [ ! -L "$config" ]; then
+        ensure_stow
+        backup="$config.backup"
+        mv -fT -- "$config" "$backup"
+        printf 'Backed up the existing Herdr config to %s.\n' "$backup"
+    fi
+
     create_symlinks herdr
 }
 
