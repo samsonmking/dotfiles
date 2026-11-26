@@ -173,6 +173,9 @@ If you previously used the `nvim-herdr-navigator` plugin, open a new Neovim sess
 | `prefix + Shift-h/j/k/l` or `prefix + arrow key` | Swap the current pane with its neighbor |
 | `Alt-h/o` or `Alt-l/i` | Switch to the previous or next tab |
 | `Alt-1` through `Alt-9` | Select a tab |
+| `Alt-k` or `Alt-j` | Switch to the previous or next workspace |
+| `prefix + 1` through `prefix + 9` | Select a workspace by number |
+| `prefix + w` | Open the workspace picker |
 | `Ctrl-h/j/k/l` | Move between Herdr panes. In Neovim Normal mode, move between splits and hand off to Herdr at the edge. |
 | `prefix + "` | Split down |
 | `prefix + %` | Split right |
