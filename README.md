@@ -165,12 +165,23 @@ Run `./setup.sh herdr` to install Herdr if missing and link the configuration. S
 
 If you previously used the `nvim-herdr-navigator` plugin, open a new Neovim session and run `:PackDelete nvim-herdr-navigator` to remove the old checkout.
 
-- **Alt+Space** is the prefix. Then `%` splits right, `"` splits down, and `r` reloads.
-- **Alt+h/o** and **Alt+l/i** switch tabs. **Alt+1–9** selects a tab. **Alt+Shift+h/l** reorders it.
-- **Ctrl+Alt+h/j/k/l** resizes panes. **Ctrl+h/j/k/l** moves between Neovim splits in Normal mode and hands off to Herdr at the edge. In shell panes it moves directly to the neighboring pane. **Prefix then Ctrl+l** clears the shell screen.
-- Review changes with `git diff`, then open the changed file in Neovim. Select lines and press **Space a c** to comment, **Space a l** to manage comments, or **Space a i** to insert a source reference. **Space a s** pastes the batch into the agent’s input for review. **Space a Shift+s** submits it immediately.
+| Key | Action |
+| --- | --- |
+| `Alt-Space` | Prefix key |
+| `Ctrl-Alt-h/j/k/l` | Resize the current pane |
+| `Alt-Shift-h/l` | Move the current tab left or right |
+| `prefix + Shift-h/j/k/l` or `prefix + arrow key` | Swap the current pane with its neighbor |
+| `Alt-h/o` or `Alt-l/i` | Switch to the previous or next tab |
+| `Alt-1` through `Alt-9` | Select a tab |
+| `Ctrl-h/j/k/l` | Move between Herdr panes. In Neovim Normal mode, move between splits and hand off to Herdr at the edge. |
+| `prefix + "` | Split down |
+| `prefix + %` | Split right |
+| `prefix + r` | Reload the Herdr configuration |
+| `prefix + Ctrl-l` | Clear the shell screen |
 
-The tmux bindings for Alt+0, the pane-swap key table, equalization, and vi copy mode have no equivalents configured here.
+Review changes with `git diff`, then open the changed file in Neovim. Select lines and press **Space a c** to comment, **Space a l** to manage comments, or **Space a i** to insert a source reference. **Space a s** pastes the batch into the agent’s input for review. **Space a Shift+s** submits it immediately.
+
+The tmux bindings for Alt+0, equalization, and vi copy mode have no equivalents configured here.
 
 ## tmux
 
